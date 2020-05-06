@@ -1,0 +1,9 @@
+name: Factionals
+main: fly.factions.Factionals
+version: 1.0.0
+api-version: 1.13
+commands:
+  f:
+    description:
+  faction:
+    description:
