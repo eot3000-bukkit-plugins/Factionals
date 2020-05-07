@@ -7,9 +7,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="patched_1.15.2" level="project" />
     <orderEntry type="library" name="Vault" level="project" />
     <orderEntry type="library" name="Dynmap-3.0-beta-10-spigot" level="project" />
     <orderEntry type="library" name="Dynmap-Factions-3.4.0" level="project" />
+    <orderEntry type="library" name="patched_1.15.2" level="project" />
   </component>
 </module>

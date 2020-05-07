@@ -59,6 +59,9 @@ public class Plot implements Savable {
             this.owner = owner;
             this.owner.addPlot(this);
 
+            this.forSale = false;
+            this.cost = 0;
+
             return true;
         } else {
             return false;
@@ -97,13 +100,28 @@ public class Plot implements Savable {
     }
 
     public boolean sell(PlotOwner owner) {
-        owner.addMoney(cost);
         return setOwner(owner);
     }
 
     @Override
     public Map<String, Object> saveInfo() {
         Map<String, Object> ret = new HashMap<>();
+        List<Map<String, Object>> permissionsList = new ArrayList<>();
+
+        for(Map.Entry<PlotOwner, PlotPermissionList> entry : permissions.entrySet()) {
+            Map<String, Object> insert = new HashMap<>();
+            List<String> permissions = new ArrayList<>();
+
+            insert.put("ownerType", entry.getKey().id());
+            insert.put("owner", entry.getKey().uniqueId());
+
+            for(PlotPermission perm : entry.getValue().getPermissions()) {
+                permissions.add(perm.toString());
+            }
+            insert.put("permissions", permissions);
+
+            permissionsList.add(insert);
+        }
 
         ret.put("world", location.world.getName());
         ret.put("x", location.x);
@@ -111,8 +129,7 @@ public class Plot implements Savable {
         ret.put("faction", faction.name);
         ret.put("ownerType", owner.id());
         ret.put("owner", owner.uniqueId());
-        //TODO: permissions
-        ret.put("permissions", new ArrayList<>());
+        ret.put("permissions", permissionsList);
 
         return ret;
     }

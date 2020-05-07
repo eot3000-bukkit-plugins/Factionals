@@ -8,12 +8,14 @@ import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class FactionalsCommandExecutor implements CommandExecutor {
     protected Factionals factionals = Factionals.getFactionals();
     protected List<SubCommand> subCommands = new ArrayList<>();
+    protected Random random = new Random();
 
     protected void registerSubCommand(int length, Function<CommandInfo, Boolean> function, String... args) {
         SubCommand command = new SubCommand();

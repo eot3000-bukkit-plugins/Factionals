@@ -20,6 +20,7 @@ public class GroupRank extends PlotOwner implements Savable {
         this.group = group;
         this.name = name;
         this.leader = leader;
+        members.add(leader);
 
         group.addRank(this);
     }
@@ -86,7 +87,7 @@ public class GroupRank extends PlotOwner implements Savable {
     }
 
     @Override
-    public boolean doesOwnPlots(User user) {
+    public boolean isOwner(User user) {
         return group.getLeader().equals(user) || leader.equals(user);
     }
 
@@ -103,6 +104,11 @@ public class GroupRank extends PlotOwner implements Savable {
     @Override
     public String uniqueId() {
         return group.getName() + "_" + name;
+    }
+
+    @Override
+    public String niceName() {
+        return group.niceName();
     }
 
     @Override

@@ -73,7 +73,7 @@ public class PlayerGroup extends PlotOwner implements Savable {
             }
         }
 
-        return false;
+        return leader.equals(user);
     }
 
     public String getName() {
@@ -102,8 +102,8 @@ public class PlayerGroup extends PlotOwner implements Savable {
     }
 
     @Override
-    public boolean doesOwnPlots(User user) {
-        return leader.getUuid().equals(user.getUuid());
+    public boolean isOwner(User user) {
+        return leader.equals(user);
     }
 
     @Override
@@ -141,6 +141,11 @@ public class PlayerGroup extends PlotOwner implements Savable {
     @Override
     public String uniqueId() {
         return name.toLowerCase();
+    }
+
+    @Override
+    public String niceName() {
+        return "Group " + name;
     }
 
     @Override

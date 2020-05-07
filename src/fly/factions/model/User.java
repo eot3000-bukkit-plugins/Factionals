@@ -1,5 +1,7 @@
 package fly.factions.model;
 
+import org.bukkit.Bukkit;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,13 +27,13 @@ public class User extends PlotOwner {
     }
 
     @Override
-    public boolean doesOwnPlots(User user) {
+    public boolean isOwner(User user) {
         return this.equals(user);
     }
 
     @Override
     public boolean canDo(User user) {
-        return doesOwnPlots(user);
+        return isOwner(user);
     }
 
     @Override
@@ -45,22 +47,28 @@ public class User extends PlotOwner {
     }
 
     @Override
-    public void addMoney(double d) {
+    public String niceName() {
+        return Bukkit.getOfflinePlayer(uuid).getName();
+    }
 
+    @Override
+    public void addMoney(double d) {
+        economy.depositPlayer(Bukkit.getOfflinePlayer(uuid), d);
     }
 
     @Override
     public void removeMoney(double d) {
-
+        economy.withdrawPlayer(Bukkit.getOfflinePlayer(uuid), d);
     }
 
     @Override
     public void setMoney(double d) {
-
+        removeMoney(getMoney());
+        addMoney(d);
     }
 
     @Override
     public double getMoney() {
-        return 0;
+        return economy.getBalance(Bukkit.getOfflinePlayer(uuid));
     }
 }

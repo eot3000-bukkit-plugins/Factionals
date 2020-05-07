@@ -24,7 +24,7 @@ public class PlotLocation {
         this.z = z;
         this.world = world;
 
-        this.hashCode = (x | (z >> 12)) | (world.getEnvironment().getId() >> 24);
+        this.hashCode = ((x+2048) | ((z+2048) << 12)) | (world.getEnvironment().getId() << 24);
     }
 
     @Override

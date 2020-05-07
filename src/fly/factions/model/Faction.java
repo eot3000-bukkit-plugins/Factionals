@@ -18,4 +18,9 @@ public class Faction extends PlayerGroup {
     public void unclaim(PlotLocation plot) {
         claimed.remove(plot);
     }
+
+    @Override
+    public String niceName() {
+        return "Faction " + name;
+    }
 }

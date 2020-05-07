@@ -1,6 +1,5 @@
 package fly.factions.commands;
 
-import fly.factions.Factionals;
 import fly.factions.model.*;
 import fly.factions.permissions.GroupPermission;
 import org.bukkit.ChatColor;
@@ -109,7 +108,7 @@ public class PlotCommand extends FactionalsCommandExecutor {
             return false;
         }
 
-        if(!plot.getOwner().doesOwnPlots(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
+        if(!plot.getOwner().isOwner(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
             info.executor.sendMessage(ChatColor.RED + "No permission! You must be the plot owner to do this!");
             return false;
         }
@@ -135,7 +134,7 @@ public class PlotCommand extends FactionalsCommandExecutor {
             return false;
         }
 
-        if(!plot.getOwner().doesOwnPlots(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
+        if(!plot.getOwner().isOwner(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
             info.executor.sendMessage(ChatColor.RED + "No permission! You must be the plot owner to do this!");
             return false;
         }
@@ -175,7 +174,7 @@ public class PlotCommand extends FactionalsCommandExecutor {
             return false;
         }
 
-        if(!plot.getOwner().doesOwnPlots(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
+        if(!plot.getOwner().isOwner(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
             info.executor.sendMessage(ChatColor.RED + "No permission! You must be the plot owner to do this!");
             return false;
         }
@@ -211,7 +210,7 @@ public class PlotCommand extends FactionalsCommandExecutor {
             return false;
         }
 
-        if(!plot.getOwner().doesOwnPlots(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
+        if(!plot.getOwner().isOwner(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
             info.executor.sendMessage(ChatColor.RED + "No permission! You must be the plot owner to do this!");
             return false;
         }
@@ -247,7 +246,7 @@ public class PlotCommand extends FactionalsCommandExecutor {
             return false;
         }
 
-        if(!plot.getOwner().doesOwnPlots(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
+        if(!plot.getOwner().isOwner(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
             info.executor.sendMessage(ChatColor.RED + "No permission! You must be the plot owner to do this!");
             return false;
         }

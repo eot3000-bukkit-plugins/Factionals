@@ -1,6 +1,8 @@
 package fly.factions.model;
 
 import fly.factions.Factionals;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.UUID;
 
 public abstract class PlotOwner {
     private List<Plot> plots = new ArrayList<>();
+    protected Economy economy = Bukkit.getServicesManager().getRegistration(Economy.class).getProvider();
 
     public static PlotOwner getPlotOwner(int id, String uniqueId) {
         switch (id) {
@@ -25,13 +28,15 @@ public abstract class PlotOwner {
         return null;
     }
 
-    public abstract boolean doesOwnPlots(User user);
+    public abstract boolean isOwner(User user);
 
     public abstract boolean canDo(User user);
 
     public abstract int id();
 
     public abstract String uniqueId();
+
+    public abstract String niceName();
 
     public abstract void addMoney(double d);
 

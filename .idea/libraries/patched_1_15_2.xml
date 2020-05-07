@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="patched_1.15.2">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/" />
+      <root url="jar://C:/Libraries/patched_1.15.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/" />
+      <root url="jar://C:/Libraries/patched_1.15.2.jar!/" />
     </SOURCES>
   </library>
 </component>
