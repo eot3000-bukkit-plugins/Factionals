@@ -2,20 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eb7ce428-2266-49b9-8ea1-ced9db5be61a" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/fly/factions/utils/FactionalsListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/patched_1_15_2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/patched_1_15_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fly/factions/villagers/FactionalsVillagerProfession.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NewFactions2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/NewFactions2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fly/factions/Factionals.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/Factionals.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fly/factions/commands/FactionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/commands/FactionCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fly/factions/commands/FactionalsCommandExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/commands/FactionalsCommandExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fly/factions/commands/GroupCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/commands/GroupCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fly/factions/commands/PlotCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/commands/PlotCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fly/factions/model/Faction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/model/Faction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fly/factions/model/PlayerGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/model/PlayerGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fly/factions/commands/SubCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/commands/SubCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fly/factions/model/Plot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/model/Plot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fly/factions/model/PlotLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/model/PlotLocation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fly/factions/model/PlotOwner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/model/PlotOwner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fly/factions/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/model/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fly/factions/permissions/GroupRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/fly/factions/permissions/GroupRank.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/plugin.yml" afterDir="false" />
     </list>
@@ -29,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="FactionCommand.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FactionCommand.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/FactionCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="116">
-              <caret line="233" lean-forward="true" selection-start-line="233" selection-end-line="233" />
+            <state relative-caret-position="17">
+              <caret line="58" column="13" lean-forward="true" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -41,23 +36,48 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FactionalsCommandExecutor.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/FactionalsCommandExecutor.java">
+      <file leaf-file-name="FactionalsVillagerProfession.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/fly/factions/villagers/FactionalsVillagerProfession.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+            <state relative-caret-position="99">
+              <caret line="33" column="43" selection-start-line="33" selection-start-column="43" selection-end-line="33" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#786#787#0" expanded="true" />
+                <element signature="e#818#819#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GroupPermission.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fly/factions/permissions/GroupPermission.java">
+      <file leaf-file-name="Villager.class" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Libraries/patched_1.15.2.jar!/org/bukkit/entity/Villager.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
+            <state>
+              <folding>
+                <element signature="e#0#2264#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VillagerProfession.class" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Libraries/patched_1.15.2.jar!/net/minecraft/server/v1_15_R1/VillagerProfession.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GroupCommand.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/GroupCommand.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="40" column="63" selection-start-line="40" selection-start-column="63" selection-end-line="40" selection-end-column="63" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -65,14 +85,12 @@
       <file leaf-file-name="GroupRank.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fly/factions/permissions/GroupRank.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3">
-              <caret line="75" column="37" selection-start-line="75" selection-start-column="37" selection-end-line="75" selection-end-column="37" />
+            <state relative-caret-position="31">
+              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1439#1440#0" expanded="true" />
-                <element signature="e#1493#1494#0" expanded="true" />
                 <element signature="e#3060#3061#0" expanded="true" />
-                <element signature="e#3087#3088#0" expanded="true" />
+                <element signature="e#3099#3100#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -81,48 +99,30 @@
       <file leaf-file-name="Plot.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fly/factions/model/Plot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
-              <caret line="56" column="37" selection-start-line="56" selection-start-column="37" selection-end-line="56" selection-end-column="37" />
+            <state relative-caret-position="255">
+              <caret line="63" column="5" lean-forward="true" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1489#1490#0" expanded="true" />
-                <element signature="e#1517#1518#0" expanded="true" />
-                <element signature="e#2578#2579#0" expanded="true" />
-                <element signature="e#2616#2617#0" expanded="true" />
-                <element signature="e#2729#2730#0" expanded="true" />
-                <element signature="e#2767#2768#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PlotLocation.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fly/factions/model/PlotLocation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="24" column="27" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#291#292#0" expanded="true" />
-                <element signature="e#332#333#0" expanded="true" />
-                <element signature="e#372#373#0" expanded="true" />
-                <element signature="e#438#439#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PlayerGroup.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fly/factions/model/PlayerGroup.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-306">
-              <caret line="53" column="48" selection-start-line="53" selection-start-column="48" selection-end-line="53" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2784#2785#0" expanded="true" />
-                <element signature="e#2826#2827#0" expanded="true" />
-                <element signature="e#3813#3814#0" expanded="true" />
-                <element signature="e#3840#3841#0" expanded="true" />
+                <element signature="e#1967#1968#0" expanded="true" />
+                <element signature="e#1997#1998#0" expanded="true" />
+                <element signature="e#2032#2033#0" expanded="true" />
+                <element signature="e#2060#2061#0" expanded="true" />
+                <element signature="e#2101#2102#0" expanded="true" />
+                <element signature="e#2132#2133#0" expanded="true" />
+                <element signature="e#2608#2609#0" expanded="true" />
+                <element signature="e#2668#2669#0" expanded="true" />
+                <element signature="e#2736#2737#0" expanded="true" />
+                <element signature="e#2781#2782#0" expanded="true" />
+                <element signature="e#3051#3052#0" expanded="true" />
+                <element signature="e#3081#3082#0" expanded="true" />
+                <element signature="e#3109#3110#0" expanded="true" />
+                <element signature="e#3136#3137#0" expanded="true" />
+                <element signature="e#3183#3184#0" expanded="true" />
+                <element signature="e#3221#3222#0" expanded="true" />
+                <element signature="e#3258#3259#0" expanded="true" />
+                <element signature="e#3300#3301#0" expanded="true" />
+                <element signature="e#3344#3345#0" expanded="true" />
+                <element signature="e#3382#3383#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -131,20 +131,8 @@
       <file leaf-file-name="PlotCommand.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/PlotCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="28" column="23" selection-start-line="28" selection-start-column="23" selection-end-line="28" selection-end-column="23" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FactionalsListener.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fly/factions/utils/FactionalsListener.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="86" column="59" selection-start-line="86" selection-start-column="59" selection-end-line="86" selection-end-column="59" />
+            <state relative-caret-position="4913">
+              <caret line="289" column="20" lean-forward="true" selection-start-line="289" selection-start-column="20" selection-end-line="289" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -157,16 +145,14 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>handleFactionOnWorld</find>
-      <find>createArea</find>
       <find>createAreaM</find>
       <find>groupOwner</find>
       <find>playerOwner</find>
@@ -195,6 +181,8 @@
       <find>title</find>
       <find>sendTitle</find>
       <find>ChatColor.</find>
+      <find>group.getRank(info.args[4])</find>
+      <find>notAGroup</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -214,10 +202,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/fly/factions/stuffs/permissions/faction/FactionRankTrack.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/stuffs/permissions/faction/PlotPerm.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/stuffs/permissions/plot/PlotPerm.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/stuffs/groupings/Plot.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/stuffs/utils/DynmapUtil.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/stuffs/utils/VaultUtil.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/stuffs/listeners/BlockListener.java" />
@@ -241,30 +225,34 @@
         <option value="$PROJECT_DIR$/src/fly/factions/groups/PlotOwner.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/groups/User.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/groups/PlayerGroup.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/commands/SubCommand.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/commands/CommandInfo.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/groups/Faction.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/model/GovernmentOrganization.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/commands/GroupCommand.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/permissions/FactionPermission.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/model/Saveable.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/model/Savable.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/permissions/GroupPermission.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/utils/FileDataUtils.java" />
-        <option value="$PROJECT_DIR$/src/plugin.yml" />
         <option value="$PROJECT_DIR$/src/fly/factions/model/PlotLocation.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/utils/Listener.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/Factionals.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/commands/PlotCommand.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/model/PlotOwner.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/permissions/GroupRank.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/model/PlayerGroup.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/model/Faction.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/model/User.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/utils/FactionalsListener.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/model/Plot.java" />
-        <option value="$PROJECT_DIR$/src/fly/factions/commands/FactionalsCommandExecutor.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/commands/CommandPredicate.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/commands/UniversalCommandPredicates.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/commands/SubCommand.java" />
+        <option value="$PROJECT_DIR$/src/plugin.yml" />
+        <option value="$PROJECT_DIR$/src/fly/factions/Factionals.java" />
         <option value="$PROJECT_DIR$/src/fly/factions/commands/FactionCommand.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/commands/FactionalsCommandExecutor.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/permissions/GroupRank.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/commands/PlotCommand.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/commands/GroupCommand.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/model/Plot.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/villagers/VillagerProfession.java" />
+        <option value="$PROJECT_DIR$/src/fly/factions/villagers/FactionalsVillagerProfession.java" />
       </list>
     </option>
   </component>
@@ -287,6 +275,24 @@
           <expand>
             <path>
               <item name="NewFactions2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NewFactions2" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NewFactions2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NewFactions2" type="462c0819:PsiDirectoryNode" />
+              <item name="out" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NewFactions2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NewFactions2" type="462c0819:PsiDirectoryNode" />
+              <item name="out" type="462c0819:PsiDirectoryNode" />
+              <item name="production" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NewFactions2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NewFactions2" type="462c0819:PsiDirectoryNode" />
+              <item name="out" type="462c0819:PsiDirectoryNode" />
+              <item name="production" type="462c0819:PsiDirectoryNode" />
               <item name="NewFactions2" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -327,6 +333,13 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="factions" type="462c0819:PsiDirectoryNode" />
               <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NewFactions2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NewFactions2" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="factions" type="462c0819:PsiDirectoryNode" />
+              <item name="villagers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="NewFactions2" type="b2602c69:ProjectViewProjectNode" />
@@ -413,7 +426,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;jar://C:/Libraries/patched_1.15.2.jar!/com/destroystokyo/paper/entity/ai/Goal.class&#10;Goal&#9;FILE&#9;jar://C:/Libraries/patched_1.15.2.jar!/com/destroystokyo/paper/entity/ai/Goal.class&#10;EndRo&#9;PSI&#9;JAVA://org.bukkit.craftbukkit.v1_15_R1.block.impl.CraftEndRod&#10;AbstractMap&#9;PSI&#9;JAVA://java.util.AbstractMap" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/egort/Desktop/.git/NewFactions2/src/fly/factions/commands/FactionCommand.java&#10;Goal&#9;FILE&#9;jar://C:/Libraries/patched_1.15.2.jar!/com/destroystokyo/paper/entity/ai/Goal.class&#10;EndRo&#9;PSI&#9;JAVA://org.bukkit.craftbukkit.v1_15_R1.block.impl.CraftEndRod&#10;AbstractMap&#9;PSI&#9;JAVA://java.util.AbstractMap" />
     <property name="last_opened_file_path" value="C:/Libraries/patched_1.15.2.jar!/" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
@@ -501,6 +514,14 @@
       <option name="presentableId" value="Default" />
       <updated>1582677441343</updated>
     </task>
+    <task id="LOCAL-00001" summary="123">
+      <created>1588893088258</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1588893088259</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -509,14 +530,14 @@
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" visible="true" weight="0.18134034" />
+      <window_info anchor="bottom" id="Messages" order="7" sideWeight="0.494375" visible="true" weight="0.18134034" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.505625" side_tool="true" visible="true" weight="0.18134034" />
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3298292" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.499375" weight="0.3298292" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
@@ -566,106 +587,16 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="123" />
+    <option name="LAST_COMMIT_MESSAGE" value="123" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/craftbukkit/v1_15_R1/inventory/CraftInventoryBrewer.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/inventory/Inventory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/craftbukkit/v1_15_R1/block/data/type/CraftBrewingStand.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="14" column="78" selection-start-line="14" selection-start-column="78" selection-end-line="14" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/block/data/type/BrewingStand.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="11" column="45" selection-start-line="11" selection-start-column="45" selection-end-line="11" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/block/data/BlockData.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/craftbukkit/v1_15_R1/block/CraftBlock.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="296" column="22" selection-start-line="296" selection-start-column="22" selection-end-line="296" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/inventory/InventoryHolder.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/block/Barrel.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/craftbukkit/v1_15_R1/block/CraftBarrel.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="15" column="80" selection-start-line="15" selection-start-column="80" selection-end-line="15" selection-end-column="80" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/block/Container.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/event/block/BlockBreakEvent.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-190" />
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/inventory/ItemStack.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-408" />
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/util/EnumSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="336" column="49" selection-start-line="336" selection-start-column="49" selection-end-line="336" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/block/BlockState.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="18" column="17" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/../../Stuff/paper 1.14.3/cache/patched_1.15.2.jar!/org/bukkit/block/Block.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="137">
@@ -785,13 +716,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/plugin.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="16" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/Object.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="163">
@@ -799,31 +723,6 @@
           <folding>
             <element signature="e#5748#5749#0" expanded="true" />
             <element signature="e#5784#5785#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fly/factions/Factionals.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-680">
-          <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
-          <folding>
-            <element signature="e#5931#5932#0" expanded="true" />
-            <element signature="e#5966#5967#0" expanded="true" />
-            <element signature="e#6017#6018#0" expanded="true" />
-            <element signature="e#6067#6068#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fly/factions/model/Faction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="23" column="33" lean-forward="true" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#505#506#0" expanded="true" />
-            <element signature="e#544#545#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -873,66 +772,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fly/factions/model/PlayerGroup.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-306">
-          <caret line="53" column="48" selection-start-line="53" selection-start-column="48" selection-end-line="53" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2784#2785#0" expanded="true" />
-            <element signature="e#2826#2827#0" expanded="true" />
-            <element signature="e#3813#3814#0" expanded="true" />
-            <element signature="e#3840#3841#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fly/factions/utils/FactionalsListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
           <caret line="86" column="59" selection-start-line="86" selection-start-column="59" selection-end-line="86" selection-end-column="59" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/PlotCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="28" column="23" selection-start-line="28" selection-start-column="23" selection-end-line="28" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fly/factions/permissions/GroupRank.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3">
-          <caret line="75" column="37" selection-start-line="75" selection-start-column="37" selection-end-line="75" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1439#1440#0" expanded="true" />
-            <element signature="e#1493#1494#0" expanded="true" />
-            <element signature="e#3060#3061#0" expanded="true" />
-            <element signature="e#3087#3088#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fly/factions/model/Plot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="56" column="37" selection-start-line="56" selection-start-column="37" selection-end-line="56" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1489#1490#0" expanded="true" />
-            <element signature="e#1517#1518#0" expanded="true" />
-            <element signature="e#2578#2579#0" expanded="true" />
-            <element signature="e#2616#2617#0" expanded="true" />
-            <element signature="e#2729#2730#0" expanded="true" />
-            <element signature="e#2767#2768#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -947,23 +792,6 @@
             <element signature="e#332#333#0" expanded="true" />
             <element signature="e#372#373#0" expanded="true" />
             <element signature="e#438#439#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/org/bukkit/ChatColor.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1054">
-          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/FactionalsCommandExecutor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="17" column="14" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
-          <folding>
-            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -989,12 +817,246 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/FactionCommand.java">
+    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/org/bukkit/ChatColor.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="233" lean-forward="true" selection-start-line="233" selection-end-line="233" />
+        <state relative-caret-position="-901">
+          <caret line="15" column="12" selection-start-line="15" selection-start-column="12" selection-end-line="15" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/CommandPredicate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/UniversalCommandPredicates.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#458#459#0" expanded="true" />
+            <element signature="e#490#491#0" expanded="true" />
+            <element signature="e#450#451#0" expanded="true" />
+            <element signature="e#477#478#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/CommandInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="1104" column="19" selection-start-line="1104" selection-start-column="19" selection-end-line="1104" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/model/Faction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#253#254#0" expanded="true" />
+            <element signature="e#288#289#0" expanded="true" />
+            <element signature="e#505#506#0" expanded="true" />
+            <element signature="e#545#546#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/plugin.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/SubCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/FactionalsCommandExecutor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="66" column="21" selection-start-line="66" selection-start-column="21" selection-end-line="66" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2723#2753#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/Factionals.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="50" column="35" lean-forward="true" selection-start-line="50" selection-start-column="35" selection-end-line="50" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/model/PlayerGroup.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="149" lean-forward="true" selection-start-line="149" selection-end-line="168" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3813#3814#0" expanded="true" />
+            <element signature="e#3851#3852#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/PlotCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4913">
+          <caret line="289" column="20" lean-forward="true" selection-start-line="289" selection-start-column="20" selection-end-line="289" selection-end-column="20" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/permissions/GroupRank.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="31">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3060#3061#0" expanded="true" />
+            <element signature="e#3099#3100#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/GroupCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="40" column="63" selection-start-line="40" selection-start-column="63" selection-end-line="40" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/model/Plot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="63" column="5" lean-forward="true" selection-start-line="63" selection-start-column="5" selection-end-line="63" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1967#1968#0" expanded="true" />
+            <element signature="e#1997#1998#0" expanded="true" />
+            <element signature="e#2032#2033#0" expanded="true" />
+            <element signature="e#2060#2061#0" expanded="true" />
+            <element signature="e#2101#2102#0" expanded="true" />
+            <element signature="e#2132#2133#0" expanded="true" />
+            <element signature="e#2608#2609#0" expanded="true" />
+            <element signature="e#2668#2669#0" expanded="true" />
+            <element signature="e#2736#2737#0" expanded="true" />
+            <element signature="e#2781#2782#0" expanded="true" />
+            <element signature="e#3051#3052#0" expanded="true" />
+            <element signature="e#3081#3082#0" expanded="true" />
+            <element signature="e#3109#3110#0" expanded="true" />
+            <element signature="e#3136#3137#0" expanded="true" />
+            <element signature="e#3183#3184#0" expanded="true" />
+            <element signature="e#3221#3222#0" expanded="true" />
+            <element signature="e#3258#3259#0" expanded="true" />
+            <element signature="e#3300#3301#0" expanded="true" />
+            <element signature="e#3344#3345#0" expanded="true" />
+            <element signature="e#3382#3383#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/commands/FactionCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="58" column="13" lean-forward="true" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/net/minecraft/server/v1_15_R1/VillagerProfession.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/net/minecraft/server/v1_15_R1/VillagerType.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/net/minecraft/server/v1_15_R1/VillagerData.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="13" column="24" lean-forward="true" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/org/bukkit/entity/EntityType.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="154" column="13" lean-forward="true" selection-start-line="154" selection-start-column="13" selection-end-line="154" selection-end-column="13" />
+          <folding>
+            <element signature="e#6892#6893#0" expanded="true" />
+            <element signature="e#6924#6925#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/net/minecraft/server/v1_15_R1/IRegistry.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="127" column="53" selection-start-line="127" selection-start-column="53" selection-end-line="127" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/org/bukkit/craftbukkit/v1_15_R1/entity/CraftVillager.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="61" column="122" lean-forward="true" selection-start-line="61" selection-start-column="122" selection-end-line="61" selection-end-column="122" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Libraries/patched_1.15.2.jar!/org/bukkit/entity/Villager.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#2264#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fly/factions/villagers/FactionalsVillagerProfession.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="99">
+          <caret line="33" column="43" selection-start-line="33" selection-start-column="43" selection-end-line="33" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#786#787#0" expanded="true" />
+            <element signature="e#818#819#0" expanded="true" />
           </folding>
         </state>
       </provider>

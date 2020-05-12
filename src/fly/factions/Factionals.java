@@ -1,6 +1,7 @@
 package fly.factions;
 
 import fly.factions.commands.FactionCommand;
+import fly.factions.commands.GroupCommand;
 import fly.factions.commands.PlotCommand;
 import fly.factions.model.*;
 import fly.factions.utils.FactionalsListener;
@@ -20,6 +21,7 @@ public class Factionals extends JavaPlugin implements Listener {
     private Map<String, PlayerGroup> groups = new HashMap<>();
     private Map<PlotLocation, Plot> plots = new HashMap<>();
 
+    private GroupCommand groupCommand;
     private FactionCommand factionCommand;
     private PlotCommand plotCommand;
 
@@ -27,10 +29,14 @@ public class Factionals extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        groupCommand = new GroupCommand();
         factionCommand = new FactionCommand();
         plotCommand = new PlotCommand();
 
         listener = new FactionalsListener();
+
+        Bukkit.getPluginCommand("g").setExecutor(groupCommand);
+        Bukkit.getPluginCommand("group").setExecutor(groupCommand);
 
         Bukkit.getPluginCommand("f").setExecutor(factionCommand);
         Bukkit.getPluginCommand("faction").setExecutor(factionCommand);

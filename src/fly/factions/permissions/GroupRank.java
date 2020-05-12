@@ -16,6 +16,8 @@ public class GroupRank extends PlotOwner implements Savable {
     protected List<GroupPermission> permissions = new ArrayList<>();
     protected List<User> members = new ArrayList<>();
 
+    protected int money;
+
     public GroupRank(PlayerGroup group, String name, User leader) {
         this.group = group;
         this.name = name;
@@ -112,22 +114,22 @@ public class GroupRank extends PlotOwner implements Savable {
     }
 
     @Override
-    public void addMoney(double d) {
-        group.addMoney(d);
-    }
-
-    @Override
-    public void removeMoney(double d) {
-        group.removeMoney(d);
+    public double getMoney() {
+        return money;
     }
 
     @Override
     public void setMoney(double d) {
-        group.setMoney(d);
+        this.money = (int) Math.floor(d);
     }
 
     @Override
-    public double getMoney() {
-        return group.getMoney();
+    public void addMoney(double d) {
+        this.money+=(int) Math.floor(d);
+    }
+
+    @Override
+    public void removeMoney(double d) {
+        this.money-=(int) Math.floor(d);
     }
 }

@@ -1,6 +1,7 @@
 package fly.factions.model;
 
 import fly.factions.Factionals;
+import fly.factions.permissions.GroupPermission;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,7 +36,19 @@ public class Plot implements Savable {
         PlotLocation location = new PlotLocation(section.getInt("x"), section.getInt("z"), Bukkit.getWorld(section.getString("world")));
         Faction faction = (Faction) Factionals.getFactionals().getGroupByName(section.getString("faction"));
 
-        faction.claim(new Plot(faction, owner, location));
+        Plot plot = new Plot(faction, owner, location);
+
+        for(ConfigurationSection perms : (List<ConfigurationSection>) configuration.getList("permissions")) {
+            PlotOwner permOwner = PlotOwner.getPlotOwner(perms.getInt("ownerType"), perms.getString("owner"));
+
+            PlotPermissionList permissions = plot.getOrCreatePermission(permOwner);
+
+            for(String s : perms.getStringList("permissions")) {
+                permissions.addPermission(PlotPermission.valueOf(s));
+            }
+        }
+
+        faction.claim(plot);
     }
 
     public Faction getFaction() {
@@ -96,7 +109,7 @@ public class Plot implements Savable {
     }
 
     public void setCost(int cost) {
-        this.cost = cost;
+        this.cost = Math.abs(cost);
     }
 
     public boolean sell(PlotOwner owner) {
@@ -130,6 +143,12 @@ public class Plot implements Savable {
         ret.put("ownerType", owner.id());
         ret.put("owner", owner.uniqueId());
         ret.put("permissions", permissionsList);
+
+        if(forSale) {
+            ret.put("cost", cost);
+        } else {
+            ret.put("cost", -1);
+        }
 
         return ret;
     }
