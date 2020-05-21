@@ -15,6 +15,7 @@ public class Plot implements Savable {
     private Faction faction;
     private PlotOwner owner;
     private PlotLocation location;
+    private PlotType type;
     private Map<PlotOwner, PlotPermissionList> permissions = new HashMap<>();
 
     private boolean forSale;
@@ -116,6 +117,14 @@ public class Plot implements Savable {
         return setOwner(owner);
     }
 
+    public PlotType getType() {
+        return type;
+    }
+
+    public void setType(PlotType type) {
+        this.type = type;
+    }
+
     @Override
     public Map<String, Object> saveInfo() {
         Map<String, Object> ret = new HashMap<>();
@@ -179,5 +188,16 @@ public class Plot implements Savable {
         BUILD,
         CONTAINER,
         OTHER_INTERACT
+    }
+
+    public enum PlotType {
+        NORMAL,
+        HOTEL,
+        SHOP,
+        ROAD,
+        MILITARY,
+        VILLAGE_HOUSING,
+        VILLAGE_WORKING,
+        VILLAGE_SCHOOL,
     }
 }

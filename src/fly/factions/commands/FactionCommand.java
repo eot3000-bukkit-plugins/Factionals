@@ -1,9 +1,13 @@
 package fly.factions.commands;
 
 import fly.factions.model.*;
+import fly.factions.utils.HouseUtils;
+import fly.factions.villagers.nms.Navigator;
 import fly.factions.permissions.GroupPermission;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -54,6 +58,13 @@ public class FactionCommand extends GroupCommand {
         registerSubCommand(1, this::factionUnclaim, "unclaim");
 
         registerSubCommand(1, this::factionMap, "map");
+        registerSubCommand(1, this::faction123, "123");
+    }
+
+    private boolean faction123(CommandInfo info) {
+        Player player = (Player) info.executor;
+        player.sendMessage("" + HouseUtils.validHouse(player.getTargetBlock(5).getLocation(), BlockFace.EAST));
+        return true;
     }
 
     @Override

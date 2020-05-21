@@ -1,6 +1,8 @@
 package fly.factions.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Faction extends PlayerGroup {
@@ -17,6 +19,10 @@ public class Faction extends PlayerGroup {
 
     public void unclaim(PlotLocation plot) {
         claimed.remove(plot);
+    }
+
+    public List<Plot> getClaimedPlots() {
+        return new ArrayList<>(claimed.values());
     }
 
     @Override

@@ -12,11 +12,13 @@ import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Switch;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
@@ -133,6 +135,13 @@ public class FactionalsListener implements Listener {
             event.getPlayer().sendTitle(new Title(GOLD + " Entering " + p2.getFaction().getName()));
 
             event.getPlayer().sendMessage(GOLD + "Owner: " + YELLOW + p2.getOwner().niceName() + GREEN + (p2.isForSale() ? " [For sale: " + p2.getCost() + "]" : ""));
+        }
+    }
+
+    @EventHandler
+    public void entitySpawn(EntitySpawnEvent event) {
+        if(event.getEntity() instanceof Villager) {
+            //event.get
         }
     }
 }

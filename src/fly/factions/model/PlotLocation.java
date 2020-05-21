@@ -27,6 +27,10 @@ public class PlotLocation {
         this.hashCode = ((x+2048) | ((z+2048) << 12)) | (world.getEnvironment().getId() << 24);
     }
 
+    public int distanceFrom(PlotLocation location) {
+        return (int) Math.sqrt((x-location.x)^2 + (z-location.z)^2);
+    }
+
     @Override
     public int hashCode() {
         return hashCode;
