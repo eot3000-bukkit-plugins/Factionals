@@ -8,6 +8,7 @@ public enum GroupPermission {
 
     LAND_CLAIM("land-claim", null),
     LAND_UNCLAIM("land-unclaim", null),
+    VILLAGES("village", null),
 
     WITHDRAW("money-withdraw", "money-withdraw"),
     DEPOSIT("money-deposit", "money-deposit"),

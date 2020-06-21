@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="PathfinderAPI" type="kotlin.js">
+    <CLASSES>
+      <root url="jar://C:/Libraries/PathfinderAPI.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

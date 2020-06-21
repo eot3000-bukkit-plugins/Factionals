@@ -1,12 +1,12 @@
 package fly.factions.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import fly.factions.villagers.Village;
+
+import java.util.*;
 
 public class Faction extends PlayerGroup {
     private Map<PlotLocation, Plot> claimed = new HashMap<>();
+    private Set<Village> villages = new HashSet<>();
     private int taxes;
 
     public Faction(User leader, String name) {
@@ -19,6 +19,18 @@ public class Faction extends PlayerGroup {
 
     public void unclaim(PlotLocation plot) {
         claimed.remove(plot);
+    }
+
+    public void addVillage(Village village) {
+        villages.add(village);
+    }
+
+    public void removeVillage(Village village) {
+        villages.remove(village);
+    }
+
+    public Set<Village> getVillages() {
+        return new HashSet<>(villages);
     }
 
     public List<Plot> getClaimedPlots() {

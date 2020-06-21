@@ -12,5 +12,8 @@
     <orderEntry type="library" name="Dynmap-Factions-3.4.0" level="project" />
     <orderEntry type="library" name="patched_1.15.2" level="project" />
     <orderEntry type="library" name="tektopia-1.1.0" level="project" />
+    <orderEntry type="library" name="Slimefun vUNOFFICIAL" level="project" />
+    <orderEntry type="library" name="PathfinderAPI" level="project" />
+    <orderEntry type="library" name="patched_1.13.2" level="project" />
   </component>
 </module>

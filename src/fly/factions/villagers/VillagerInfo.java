@@ -1,34 +1,68 @@
 package fly.factions.villagers;
 
+import fly.factions.Factionals;
 import fly.factions.model.Plot;
+import fly.factions.model.PlotLocation;
+import fly.factions.utils.TownUtils;
+import fly.factions.villagers.structures.HousingStructure;
 import org.bukkit.Location;
+import org.bukkit.entity.Villager;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class VillagerInfo {
-    private UUID uuid;
-
     private FactionalsVillagerProfession profession;
+    private Villager entity;
+    private Village village;
     private Map<EducationType, Integer> education = new HashMap<>();
-    private Location bed;
-    private Plot workLand;
+
+    private Location sleeping;
+
+
+    public VillagerInfo(Villager villager, FactionalsVillagerProfession profession) {
+        this.profession = profession;
+        this.entity = villager;
+
+        findVillage();
+
+        Factionals.getFactionals().addVillagerInfo(villager.getUniqueId(), this);
+    }
+
+    private void findVillage() {
+        Plot plot = Factionals.getFactionals().getPlotByLocation(new PlotLocation(entity.getChunk()));
+        Village village = TownUtils.getVillage(plot);
+
+        if(village == null) {
+            return;
+        }
+
+        this.village = village;
+    }
 
     public FactionalsVillagerProfession getProfession() {
         return profession;
-    }
-
-    public Location getBed() {
-        return bed;
     }
 
     public Map<EducationType, Integer> getEducation() {
         return new HashMap<>(education);
     }
 
-    public Plot getWorkLand() {
-        return workLand;
+    public Villager getEntity() {
+        return entity;
+    }
+
+    public Village getVillage() {
+        return village;
+    }
+
+    public Location getSleeping() {
+        return sleeping;
+    }
+
+    public void setSleeping(Location sleeping) {
+        this.sleeping = sleeping;
     }
 
     public enum EducationType {

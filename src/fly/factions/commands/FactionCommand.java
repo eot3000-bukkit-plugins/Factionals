@@ -1,13 +1,13 @@
 package fly.factions.commands;
 
+import com.google.common.collect.Iterables;
 import fly.factions.model.*;
 import fly.factions.utils.HouseUtils;
-import fly.factions.villagers.nms.Navigator;
 import fly.factions.permissions.GroupPermission;
+import fly.factions.villagers.Village;
+import fly.factions.villagers.structures.Structure;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -55,15 +55,34 @@ public class FactionCommand extends GroupCommand {
                 .also(2, notAFaction, pGroupFaction)
                 .groupPermission(2, GroupPermission.LAND_CLAIM);
 
+        registerSubCommand(2, this::faction123, "village", "claim");
+        registerSubCommand(2, this::faction12, "village", "info");
+
         registerSubCommand(1, this::factionUnclaim, "unclaim");
 
         registerSubCommand(1, this::factionMap, "map");
-        registerSubCommand(1, this::faction123, "123");
     }
 
     private boolean faction123(CommandInfo info) {
-        Player player = (Player) info.executor;
-        player.sendMessage("" + HouseUtils.validHouse(player.getTargetBlock(5).getLocation(), BlockFace.EAST));
+        Village village = new Village();
+
+        village.addPlot(factionals.getPlotByLocation(new PlotLocation(((Player) info.executor).getLocation())));
+
+        ((Faction)factionals.getGroupByName("hi")).addVillage(village);
+
+        return true;
+    }
+
+    private boolean faction12(CommandInfo info) {
+        Village village = Iterables.get(() -> ((Faction) factionals.getGroupByName("hi")).getVillages().iterator(), 0);
+
+        for(Structure structure : village.getStructures()) {
+            System.out.println(structure.getDoor());
+        }
+        for(Plot plot : village.getPlots()) {
+            System.out.println(plot.getLocation().toString());
+        }
+
         return true;
     }
 

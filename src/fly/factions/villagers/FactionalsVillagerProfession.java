@@ -14,10 +14,7 @@ public enum FactionalsVillagerProfession {
     FISHERMAN(Villager.Profession.FISHERMAN),
     CHEF(Villager.Profession.LEATHERWORKER),
 
-    TOOL_SMITH(Villager.Profession.TOOLSMITH),
-    WEAPON_SMITH(Villager.Profession.WEAPONSMITH),
-    ARMOR_SMITH(Villager.Profession.ARMORER),
-    FLETHER(Villager.Profession.FLETCHER),
+    SMITH(Villager.Profession.TOOLSMITH),
 
     CLERIC(Villager.Profession.CLERIC),
 

@@ -6,13 +6,13 @@ import fly.factions.model.Plot;
 import fly.factions.model.PlotLocation;
 import fly.factions.model.PlotOwner;
 import fly.factions.model.User;
+
 import org.bukkit.Material;
 import org.bukkit.block.Container;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Switch;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -140,8 +140,6 @@ public class FactionalsListener implements Listener {
 
     @EventHandler
     public void entitySpawn(EntitySpawnEvent event) {
-        if(event.getEntity() instanceof Villager) {
-            //event.get
-        }
+
     }
 }
