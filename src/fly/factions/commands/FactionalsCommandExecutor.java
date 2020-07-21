@@ -1,6 +1,7 @@
 package fly.factions.commands;
 
 import fly.factions.Factionals;
+import fly.factions.model.Company;
 import fly.factions.model.Faction;
 import fly.factions.model.Plot;
 import fly.factions.permissions.GroupPermission;
@@ -22,7 +23,7 @@ public class FactionalsCommandExecutor implements CommandExecutor {
 
     protected Predicate<String> pGroupNotNull = (x) -> factionals.getGroupByName(x) != null;
     protected Predicate<String> pGroupNull = (x) -> factionals.getGroupByName(x) == null;
-    protected Predicate<String> pGroupNotFaction = (x) -> !(factionals.getGroupByName(x) instanceof Faction);
+    protected Predicate<String> pGroupCompany = (x) -> factionals.getGroupByName(x) instanceof Company;
     protected Predicate<String> pGroupFaction = (x) -> factionals.getGroupByName(x) instanceof Faction;
     protected Predicate<String> pPlayerNotNull = (x) -> factionals.getUserByName(x) != null;
 
@@ -56,6 +57,7 @@ public class FactionalsCommandExecutor implements CommandExecutor {
 
     protected String nameTaken = ChatColor.RED + "Name already taken!";
     protected String notAFaction = ChatColor.RED + "Not a faction!";
+    protected String notACompany = ChatColor.RED + "Not a company!";
     protected String notAGroup = ChatColor.RED + "Not a group!";
     protected String notARank = ChatColor.RED + "Not a rank!";
     protected String notAUser = ChatColor.RED + "Not a user!";

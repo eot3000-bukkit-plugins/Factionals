@@ -1,15 +1,16 @@
 package fly.factions.commands;
 
+import fly.factions.model.Company;
 import fly.factions.model.PlayerGroup;
 import fly.factions.model.User;
 import fly.factions.permissions.GroupPermission;
 import fly.factions.permissions.GroupRank;
 import org.bukkit.entity.Player;
 
-public class GroupCommand extends FactionalsCommandExecutor {
+public class CompanyCommand extends FactionalsCommandExecutor {
     boolean faction;
 
-    public GroupCommand() {
+    public CompanyCommand() {
         this(false);
 
         registerSubCommand(2, this::createGroup, "create")
@@ -18,15 +19,18 @@ public class GroupCommand extends FactionalsCommandExecutor {
         registerSubCommand(4, this::addMember, "member", "add")
                 .also(3, notAUser, pPlayerNotNull)
                 .also(4, notAGroup, pGroupNotNull)
+                .also(4, notAGroup, pGroupCompany)
                 .groupPermission(4, GroupPermission.MEMBER_INVITE);
 
         registerSubCommand(4, this::removeMember, "member", "remove")
                 .also(3, notAUser, pPlayerNotNull)
                 .also(4, notAGroup, pGroupNotNull)
+                .also(4, notAGroup, pGroupCompany)
                 .groupPermission(4, GroupPermission.MEMBER_KICK);
 
         registerSubCommand(5, this::rankCreate, "rank", "create")
                 .also(3, notAGroup, pGroupNotNull)
+                .also(3, notAGroup, pGroupCompany)
                 .also(5, notAUser, pPlayerNotNull)
                 .groupPermission(3, GroupPermission.RANK_EDIT);
 
@@ -47,14 +51,18 @@ public class GroupCommand extends FactionalsCommandExecutor {
         registerSubCommand(6, this::rankPlayerRemove, "rank", "player", "remove")
                 .also(4, notAGroup, pGroupNotNull)
                 .also(6, notAUser, pPlayerNotNull);
+
+        registerSubCommand(5, this::rankDeposit, "rank", "deposit")
+                .also(3, notAGroup, pGroupNotNull)
+                .groupPermission(4, GroupPermission.WITHDRAW);
     }
 
-    public GroupCommand(boolean faction) {
+    public CompanyCommand(boolean faction) {
         this.faction = faction;
     }
 
     protected boolean createGroup(CommandInfo info) {
-        factionals.addGroup(new PlayerGroup(factionals.getUserByUUID(((Player)info.executor).getUniqueId()), info.args[1]));
+        factionals.addGroup(new Company(factionals.getUserByUUID(((Player)info.executor).getUniqueId()), info.args[1]));
         info.executor.sendMessage(success);
         return true;
     }
@@ -154,6 +162,28 @@ public class GroupCommand extends FactionalsCommandExecutor {
     }
 
     protected boolean rankPlayerRemove(CommandInfo info) {
+        PlayerGroup group = factionals.getGroupByName(info.args[3]);
+        GroupRank rank = group.getRank(info.args[4]);
+        User user = factionals.getUserByName(info.args[5]);
+
+        if(!group.getMembers().contains(user)) {
+            info.executor.sendMessage(userNotInFaction);
+            return false;
+        }
+        if(rank == null) {
+            info.executor.sendMessage(notARank);
+            return false;
+        }
+        if(!rank.isOwner(factionals.getUserByUUID(((Player) info.executor).getUniqueId()))) {
+            info.executor.sendMessage(noPermission);
+            return false;
+        }
+        rank.removeMember(user);
+        info.executor.sendMessage(success);
+        return true;
+    }
+
+    protected boolean rankDeposit(CommandInfo info) {
         PlayerGroup group = factionals.getGroupByName(info.args[3]);
         GroupRank rank = group.getRank(info.args[4]);
         User user = factionals.getUserByName(info.args[5]);

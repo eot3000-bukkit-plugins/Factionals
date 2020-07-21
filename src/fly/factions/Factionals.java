@@ -1,30 +1,18 @@
 package fly.factions;
 
 import fly.factions.commands.FactionCommand;
-import fly.factions.commands.GroupCommand;
+import fly.factions.commands.CompanyCommand;
 import fly.factions.commands.PlotCommand;
 import fly.factions.model.*;
 import fly.factions.utils.FactionalsListener;
 import fly.factions.utils.FileDataUtils;
-import fly.factions.utils.HouseUtils;
 import fly.factions.villagers.VillagerInfo;
-import fly.factions.villagers.nms.entities.FactionalsEntityVillager;
-import jdk.nashorn.internal.ir.Block;
-import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
-import net.minecraft.server.v1_15_R1.EntityTypes;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class Factionals extends JavaPlugin implements Listener {
@@ -35,7 +23,7 @@ public class Factionals extends JavaPlugin implements Listener {
     private Map<PlotLocation, Plot> plots = new HashMap<>();
     private Map<UUID, VillagerInfo> villagers = new HashMap<>();
 
-    private GroupCommand groupCommand;
+    private CompanyCommand companyCommand;
     private FactionCommand factionCommand;
     private PlotCommand plotCommand;
 
@@ -45,7 +33,7 @@ public class Factionals extends JavaPlugin implements Listener {
 
     @Override
     public void onLoad() {
-        try {
+        /*try {
             Field field = EntityTypes.class.getDeclaredField("ba");
             Field mods = Field.class.getDeclaredField("modifiers");
 
@@ -56,19 +44,19 @@ public class Factionals extends JavaPlugin implements Listener {
             field.set(EntityTypes.VILLAGER, (EntityTypes.b) FactionalsEntityVillager::new);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
     public void onEnable() {
-        groupCommand = new GroupCommand();
+        companyCommand = new CompanyCommand();
         factionCommand = new FactionCommand();
         plotCommand = new PlotCommand();
 
         listener = new FactionalsListener();
 
-        Bukkit.getPluginCommand("g").setExecutor(groupCommand);
-        Bukkit.getPluginCommand("group").setExecutor(groupCommand);
+        Bukkit.getPluginCommand("c").setExecutor(companyCommand);
+        Bukkit.getPluginCommand("company").setExecutor(companyCommand);
 
         Bukkit.getPluginCommand("f").setExecutor(factionCommand);
         Bukkit.getPluginCommand("faction").setExecutor(factionCommand);
@@ -79,7 +67,7 @@ public class Factionals extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(listener, this);
 
-        villageTickTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+        /*villageTickTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for(World world : Bukkit.getWorlds()) {
                 Collection<Location> list = BlockStorage.getAllBlocksOfType((SlimefunItemStack) SlimefunItems.VILLAGE_SIGN, world);
 
@@ -89,7 +77,7 @@ public class Factionals extends JavaPlugin implements Listener {
                     }
                 }
             }
-        }, 0, 100);
+        }, 0, 100);*/
 
         FileDataUtils.loadUsers();
         FileDataUtils.loadGroups();

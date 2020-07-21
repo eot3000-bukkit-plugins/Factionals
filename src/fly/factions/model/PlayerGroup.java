@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.*;
 
-public class PlayerGroup extends PlotOwner implements Savable {
+public abstract class PlayerGroup extends PlotOwner implements Savable {
     protected User leader;
     protected Set<User> members = new HashSet<>();
 
@@ -90,7 +90,7 @@ public class PlayerGroup extends PlotOwner implements Savable {
         if(section.getBoolean("is-faction")) {
             group = new Faction(leader, name);
         } else {
-            group = new PlayerGroup(leader, name);
+            group = new Company(leader, name);
         }
 
         ConfigurationSection ranks = section.getConfigurationSection("ranks");

@@ -16,8 +16,8 @@ public class PlotCommand extends FactionalsCommandExecutor {
             .also(3, notAFaction, pGroupFaction)
             .groupPermission(3, GroupPermission.WITHDRAW);
 
-        registerSubCommand(3, this::claimPlotGroup, "claim", "group")
-                .also(3, notAGroup, pGroupNotNull)
+        registerSubCommand(3, this::claimPlotGroup, "claim", "company")
+                .also(3, notAGroup, pGroupCompany)
                 .groupPermission(3, GroupPermission.WITHDRAW);
 
         registerSubCommand(4, this::claimPlotRank, "claim", "rank")
@@ -39,13 +39,13 @@ public class PlotCommand extends FactionalsCommandExecutor {
                 .also(3, notAUser, pGroupFaction)
                 .also(4, notAPermission, pPlotPermission);
 
-        registerSubCommand(4, this::permissionGroup, "permission", "group")
-                .also(3, notAUser, pGroupNotNull)
+        registerSubCommand(4, this::permissionGroup, "permission", "company")
+                .also(3, notAUser, pGroupCompany)
                 .also(4, notAPermission, pPlotPermission);
 
-        registerSubCommand(5, this::permissionRank, "permission", "rank")
+        /*registerSubCommand(5, this::permissionRank, "permission", "rank")
                 .also(3, notAUser, pGroupNotNull)
-                .also(4, notAPermission, pPlotPermission);
+                .also(4, notAPermission, pPlotPermission);*/
     }
 
     private boolean claimPlotSelf(CommandInfo info) {

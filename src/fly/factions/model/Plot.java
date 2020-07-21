@@ -39,7 +39,7 @@ public class Plot implements Savable {
 
         Plot plot = new Plot(faction, owner, location);
 
-        for(ConfigurationSection perms : (List<ConfigurationSection>) configuration.getList("permissions")) {
+        for(ConfigurationSection perms : (List<ConfigurationSection>) section.getList("permissions")) {
             PlotOwner permOwner = PlotOwner.getPlotOwner(perms.getInt("ownerType"), perms.getString("owner"));
 
             PlotPermissionList permissions = plot.getOrCreatePermission(permOwner);

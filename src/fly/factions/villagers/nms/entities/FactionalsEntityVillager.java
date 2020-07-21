@@ -15,6 +15,11 @@ public class FactionalsEntityVillager extends net.minecraft.server.v1_15_R1.Enti
     }
 
     @Override
+    protected void initPathfinder() {
+        super.initPathfinder();
+    }
+
+    /*@Override
     public BehaviorController<?> a(Dynamic<?> dynamic) {
         BehaviorController<EntityVillager> behaviorController = new BehaviorController<>(Lists.newArrayList(MemoryModuleType.WALK_TARGET, MemoryModuleType.PATH), Lists.newArrayList(), dynamic);
 
@@ -31,12 +36,12 @@ public class FactionalsEntityVillager extends net.minecraft.server.v1_15_R1.Enti
     public void initBehaviors(BehaviorController<EntityVillager> controller) {
         controller.setSchedule(Schedule.VILLAGER_DEFAULT);
 
-        controller.a(Activity.CORE, ImmutableList.of(new Pair<>(10, new BehavorMove(1))));
-        controller.a(Activity.REST, ImmutableList.of(new Pair<>(10, new WalkHomeAtNight())));
+        controller.a(Activity.CORE, ImmutableList.of(Pair.of(10, (Behavior) new BehavorMove(1)), Pair.of(10, new BehaviorInteractDoor())));
+        controller.a(Activity.REST, ImmutableList.of(Pair.of(10, new WalkHomeAtNight())));
 
         controller.a(ImmutableSet.of(Activity.CORE));
         controller.b(Activity.IDLE);
         controller.a(Activity.IDLE);
         controller.a(this.world.getDayTime(), this.world.getTime());
-    }
+    }*/
 }

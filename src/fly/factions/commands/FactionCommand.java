@@ -2,7 +2,6 @@ package fly.factions.commands;
 
 import com.google.common.collect.Iterables;
 import fly.factions.model.*;
-import fly.factions.utils.HouseUtils;
 import fly.factions.permissions.GroupPermission;
 import fly.factions.villagers.Village;
 import fly.factions.villagers.structures.Structure;
@@ -12,9 +11,10 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class FactionCommand extends GroupCommand {
+public class FactionCommand extends CompanyCommand {
     public FactionCommand() {
         super(true);
+
         registerSubCommand(2, this::createGroup, "create")
                 .also(2, nameTaken, pGroupNull);
 
@@ -55,8 +55,8 @@ public class FactionCommand extends GroupCommand {
                 .also(2, notAFaction, pGroupFaction)
                 .groupPermission(2, GroupPermission.LAND_CLAIM);
 
-        registerSubCommand(2, this::faction123, "village", "claim");
-        registerSubCommand(2, this::faction12, "village", "info");
+        //registerSubCommand(2, this::faction123, "village", "claim");
+        //registerSubCommand(2, this::faction12, "village", "info");
 
         registerSubCommand(1, this::factionUnclaim, "unclaim");
 
@@ -83,6 +83,18 @@ public class FactionCommand extends GroupCommand {
             System.out.println(plot.getLocation().toString());
         }
 
+        return true;
+    }
+
+    protected boolean addMember(CommandInfo info) {
+        factionals.getGroupByName(info.args[3]).addMember(factionals.getUserByName(info.args[2]));
+        info.executor.sendMessage(success);
+        return true;
+    }
+
+    protected boolean removeMember(CommandInfo info) {
+        factionals.getGroupByName(info.args[3]).removeMember(factionals.getUserByName(info.args[2]));
+        info.executor.sendMessage(success);
         return true;
     }
 
