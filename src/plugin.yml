@@ -3,15 +3,11 @@ main: fly.factions.Factionals
 version: 1.0.0
 api-version: 1.13
 commands:
-  c:
-    description:
-  company:
-    description:
   f:
     description:
   faction:
     description:
-  p:
+  factions:
     description:
-  plot:
+  factionals:
     description:
