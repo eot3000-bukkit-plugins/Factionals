@@ -53,3 +53,23 @@ commands:
       withdraw:
       deposit:
       logs:
+  f:
+    permissions:
+      view:
+      grant:
+      revoke:
+  faction:
+    permissions:
+      view:
+      grant:
+      revoke:
+  factions:
+    permissions:
+      view:
+      grant:
+      revoke:
+  factionals:
+    permissions:
+      view:
+      grant:
+      revoke:
