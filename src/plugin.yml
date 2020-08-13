@@ -18,6 +18,11 @@ commands:
       view:
       grant:
       revoke:
+    information:
+    player:
+    flags:
+      view:
+      modify:
   faction:
     description:
     rename:
@@ -31,6 +36,11 @@ commands:
       view:
       grant:
       revoke:
+    information:
+    player:
+    flags:
+      view:
+      modify:
   factions:
     description:
     rename:
@@ -44,6 +54,11 @@ commands:
       view:
       grant:
       revoke:
+    information:
+    player:
+    flags:
+      view:
+      modify:
   factionals:
     description:
     rename:
@@ -57,4 +72,9 @@ commands:
       view:
       grant:
       revoke:
+    information:
+    player:
+    flags:
+      view:
+      modify:
   
