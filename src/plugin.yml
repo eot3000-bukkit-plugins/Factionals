@@ -11,3 +11,43 @@ commands:
     description:
   factionals:
     description:
+  f:
+    rename:
+  faction:
+    rename:
+  factions:
+    rename:
+  factionals:
+    rename:
+  f:
+    help:
+  faction:
+    help:
+  factions:
+    help:
+  factionals:
+    help:
+  f:
+    balance:
+      view:
+      withdraw:
+      deposit:
+      logs:
+  faction:
+    balance:
+      view:
+      withdraw:
+      deposit:
+      logs:
+  factions:
+    balance:
+      view:
+      withdraw:
+      deposit:
+      logs:
+  factionals:
+    balance:
+      view:
+      withdraw:
+      deposit:
+      logs:
