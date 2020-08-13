@@ -3,7 +3,7 @@ main: fly.factions.Factionals
 version: 1.0.0
 api-version: 1.13
 softdepend: [Vault]
-author: [FlyGuy3000]
+author: FlyGuy3000
 commands:
   f:
     description:
