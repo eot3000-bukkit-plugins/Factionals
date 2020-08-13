@@ -7,69 +7,54 @@ author: FlyGuy3000
 commands:
   f:
     description:
+    rename:
+    help:
+    balance:
+      view:
+      withdraw:
+      deposit:
+      logs:
+    permissions:
+      view:
+      grant:
+      revoke:
   faction:
     description:
+    rename:
+    help:
+    balance:
+      view:
+      withdraw:
+      deposit:
+      logs:
+    permissions:
+      view:
+      grant:
+      revoke:
   factions:
     description:
+    rename:
+    help:
+    balance:
+      view:
+      withdraw:
+      deposit:
+      logs:
+    permissions:
+      view:
+      grant:
+      revoke:
   factionals:
     description:
-  f:
     rename:
-  faction:
-    rename:
-  factions:
-    rename:
-  factionals:
-    rename:
-  f:
     help:
-  faction:
-    help:
-  factions:
-    help:
-  factionals:
-    help:
-  f:
     balance:
       view:
       withdraw:
       deposit:
       logs:
-  faction:
-    balance:
-      view:
-      withdraw:
-      deposit:
-      logs:
-  factions:
-    balance:
-      view:
-      withdraw:
-      deposit:
-      logs:
-  factionals:
-    balance:
-      view:
-      withdraw:
-      deposit:
-      logs:
-  f:
     permissions:
       view:
       grant:
       revoke:
-  faction:
-    permissions:
-      view:
-      grant:
-      revoke:
-  factions:
-    permissions:
-      view:
-      grant:
-      revoke:
-  factionals:
-    permissions:
-      view:
-      grant:
-      revoke:
+  
