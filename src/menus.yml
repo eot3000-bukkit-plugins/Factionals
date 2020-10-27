@@ -1,0 +1,76 @@
+menus:
+  main-menu:
+    name: "&bFactionals Main Menu"
+    default:
+      id: LIGHT_GRAY_STAINED_GLASS_PANE
+      name: " "
+
+    0:
+      id: RED_STAINED_GLASS_PANE
+      name: "&cFactions Management"
+      action:
+        type: open-menu
+        info: faction-menu
+    #1:
+    #  id: RED_STAINED_GLASS_PANE
+    #  name: "&cFactions Management"
+    #  action:
+    #    type: open-menu
+    #    menu-id: faction-menu
+  faction-menu:
+    name: "&cFactions Management"
+    default:
+      id: LIGHT_GRAY_STAINED_GLASS_PANE
+      name: " "
+
+    10:
+      id: PLAYER_HEAD
+      name: "&cMembers Management"
+      action:
+        type: open-menu
+        info: members
+
+    12:
+      id: SUNFLOWER
+      name: "&6Factions Top"
+      action:
+        type: open-menu
+        info: faction-top
+
+    10:
+      id: PLAYER_HEAD
+      name: "&cMembers Management"
+      action:
+        type: open-menu
+        info: members
+
+    16:
+      id: LIME_DYE
+      name: "&cCreate Faction"
+      desc: "&4&lTHIS WILL KICK YOU FROM YOUR CURRENT FACTION"
+      action:
+        type: create-faction
+
+  members:
+    name: "&2Member Management"
+    default:
+      id: LIGHT_GRAY_STAINED_GLASS_PANE
+      name: " "
+
+    10:
+      id: LEAD
+      name: "&cMembers Management"
+      action:
+        type: open-menu
+        info: current-members
+
+    12:
+      id: PLAYER_HEAD
+      type: yourself
+
+    14:
+      id: NAME_TAG
+      name: "&cInvite Members"
+      action:
+        type: open-menu
+        info: invite-members

@@ -1,65 +1,144 @@
 package fly.factions.menus;
 
-import javafx.util.Pair;
+import fly.factions.Factionals;
+import fly.factions.model.Faction;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
 
-public class Menu implements Listener {
-    public static Map<String, Menu> MENUS = new HashMap<>();
-
-    private Map<Integer, Pair<Button, ItemStack>> items = new HashMap<>();
-    private String name;
-
-    protected Menu(String name) {
-        this.name = name;
-
-        MENUS.put(name, this);
+public abstract class Menu {
+    static {
+        start();
     }
 
-    protected void set(int index, Pair<Button, ItemStack> item) {
-        items.put(index, item);
+    public static void init() {
+
     }
 
-    protected ItemStack withName(ItemStack stack, String name) {
-        ItemMeta meta = stack.getItemMeta();
+    private static void start() {
+        MENU_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "menu");
+        UUID_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "uuid");
+        TYPE_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "type");
+        MENUS = new HashMap<>();
 
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        File file = new File("./plugins/Factionals/menus.yml");
 
-        stack.setItemMeta(meta);
+        if(!file.exists()) {
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+                 InputStream stream = Menu.class.getClassLoader().getResourceAsStream("menus.yml")) {
+                byte[] bytes = new byte[stream.available()];
 
-        return stack;
-    }
+                stream.read(bytes);
 
-    public static void open(Menu menu, Player player) {
-        Inventory inventory = Bukkit.createInventory(player, 27, menu.name);
-
-        for(int x : menu.items.keySet()) {
-            inventory.setItem(x, menu.items.get(x).getValue());
+                fileOutputStream.write(bytes);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        player.openInventory(inventory);
+        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+
+        ConfigurationSection menus = configuration.getConfigurationSection("menus");
+        Set<String> keys = menus.getKeys(false);
+
+        for(String key : keys) {
+            MENUS.put(key, new FileMenu(menus.getConfigurationSection(key), key));
+        }
+
+        initMenus2();
     }
 
-    public static void onClick(InventoryClickEvent event) {
-        Menu menu = Menu.MENUS.get(event.getView().getTitle());
+    private static void initMenus2() {
+        MENUS.put("current-members", new MembersListMenu());
+        MENUS.put("invite-members", new InviteMenu());
 
-        if(menu != null) {
-            menu.items.get(event.getSlot()).getKey().onClick(event.getClick(), (Player) event.getWhoClicked());
+        CustomButton.BUTTONS.put("yourself", new YourselfButton());
+    }
+
+    public static NamespacedKey MENU_NAMESPACE;
+    public static NamespacedKey UUID_NAMESPACE;
+    public static NamespacedKey TYPE_NAMESPACE;
+
+    private static Map<String, Menu> MENUS;
+
+    public static void openMenu(Player player, String info) {
+        Menu menu = MENUS.get(info.split("_")[0]);
+        Inventory inv = menu.createInventory(player, info);
+
+        Bukkit.getScheduler().runTaskLater(Factionals.getFactionals(), () -> player.openInventory(inv), 1);
+    }
+
+    public static void buttonClicked(InventoryClickEvent event, String id) {
+        MENUS.get(id).runButtonClick(event);
+
+        event.setCancelled(true);
+    }
+
+    public abstract void runButtonClick(InventoryClickEvent event);
+
+    public abstract Inventory createInventory(Player player, String info);
+
+    public static abstract class CustomButton {
+        static final HashMap<String, CustomButton> BUTTONS = new HashMap<>();
+
+        public abstract ItemStack getItemStack(Player player);
+
+        public static CustomButton getButton(String name) {
+            return BUTTONS.get(name);
         }
     }
 
-    public interface Button {
-        void onClick(ClickType type, Player player);
+    public static class ButtonAction {
+        public final ButtonActionType type;
+        public final String info;
+
+        public ButtonAction(ConfigurationSection section) {
+            this.type = ButtonActionType.getFromString(section.getString("action.type"));
+            this.info = section.contains("action.info") ? section.getString("action.info") : "";
+        }
+
+        public void execute(Player player) {
+            if(type == null) {
+                return;
+            }
+
+            type.biConsumer.accept(player, info);
+        }
+
+        public enum ButtonActionType {
+            OPEN_MENU("open-menu", Menu::openMenu),
+            CREATE_FACTION("create-faction", Faction::startCreation);
+
+            public final String name;
+            public final BiConsumer<Player, String> biConsumer;
+
+            ButtonActionType(String name, BiConsumer<Player, String> biConsumer) {
+                this.name = name;
+                this.biConsumer = biConsumer;
+            }
+
+            public static ButtonActionType getFromString(String name) {
+                for(ButtonActionType type : values()) {
+                    if(type.name.equalsIgnoreCase(name)) {
+                        return type;
+                    }
+                }
+
+                return null;
+            }
+        }
     }
 }

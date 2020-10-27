@@ -28,4 +28,12 @@ public abstract class PlayerGroup implements EconomyMember {
     public void setLeader(EconomyMember leader) {
         this.leader = leader;
     }
+
+    public void addMember(User user) {
+        members.add(user);
+    }
+
+    public void removeMember(User user) {
+        members.remove(user);
+    }
 }
