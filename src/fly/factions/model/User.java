@@ -15,6 +15,7 @@ public class User implements EconomyMember {
     private String name;
     private UUID uuid;
     private Faction faction;
+    private boolean claimMode;
 
     private BiConsumer<String, Player> chatFlag = defaultFlag;
 
@@ -70,5 +71,13 @@ public class User implements EconomyMember {
     @Override
     public void takeMoney(double x) {
 
+    }
+
+    public boolean isClaimMode() {
+        return claimMode;
+    }
+
+    public void setClaimMode(boolean claimMode) {
+        this.claimMode = claimMode;
     }
 }

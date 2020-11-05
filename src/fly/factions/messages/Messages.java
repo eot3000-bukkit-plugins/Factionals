@@ -14,5 +14,10 @@ public class Messages {
     public static final String SUCCESS = ChatColor.GREEN + "Success!";
 
 
+    public static final String FACTION_MESSAGE_MEMBER_INVITE = ChatColor.YELLOW + "Player " + ChatColor.GREEN + "%1" + ChatColor.YELLOW + " has been invited to your faction!";
+    public static final String FACTION_MESSAGE_MEMBER_JOIN = ChatColor.YELLOW + "Player " + ChatColor.GREEN + "%1" + ChatColor.YELLOW + " has joined your faction!";
+    public static final String FACTION_MESSAGE_MEMBER_LEAVE = ChatColor.YELLOW + "Player " + ChatColor.GREEN + "%1" + ChatColor.YELLOW + " has left your faction!";
+
+
 
 }

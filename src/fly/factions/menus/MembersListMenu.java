@@ -21,33 +21,34 @@ public class MembersListMenu extends Menu {
     public void runButtonClick(InventoryClickEvent event) {
         int slot = event.getSlot();
 
-
+        event.setCancelled(true);
     }
 
     @Override
     public Inventory createInventory(Player player, String info) {
-        Inventory inventory = Bukkit.createInventory(player, 27, ChatColor.translateAlternateColorCodes('&', "&2Members Management"));
+        Inventory inventory = Bukkit.createInventory(player, 27, ChatColor.translateAlternateColorCodes('&', "&2Manage Members"));
         Faction faction = Factionals.getFactionals().getUserFromPlayer(player).getFaction();
-        ItemStack itemStack = new ItemStack(Material.REDSTONE_BLOCK);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-
-        itemMeta.setDisplayName(Messages.NOT_MEMBER_FACTION);
-        itemMeta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, "members");
-
-        itemStack.setItemMeta(itemMeta);
 
         if(faction == null) {
-            for(int x = 0; x < 26; x++) {
+            ItemStack itemStack = new ItemStack(Material.REDSTONE_BLOCK);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+
+            itemMeta.setDisplayName(Messages.NOT_MEMBER_FACTION);
+            itemMeta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, "current-members");
+
+            itemStack.setItemMeta(itemMeta);
+
+            for(int x = 0; x < 27; x++) {
                 inventory.setItem(x, itemStack);
             }
         } else {
             for(User user : faction.getMembers()) {
-                itemStack = new ItemStack(Material.PLAYER_HEAD);
-                itemMeta = itemStack.getItemMeta();
+                ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
+                ItemMeta itemMeta = itemStack.getItemMeta();
 
                 ((SkullMeta) itemMeta).setOwningPlayer(Bukkit.getOfflinePlayer(user.getUuid()));
                 itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&2" + user.getName()));
-                itemMeta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, "members");
+                itemMeta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, "current-members");
                 itemMeta.getPersistentDataContainer().set(UUID_NAMESPACE, PersistentDataType.STRING, user.getUuid().toString());
 
                 itemStack.setItemMeta(itemMeta);

@@ -32,6 +32,7 @@ public abstract class Menu {
         MENU_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "menu");
         UUID_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "uuid");
         TYPE_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "type");
+        FACTION_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "faction");
         MENUS = new HashMap<>();
 
         File file = new File("./plugins/Factionals/menus.yml");
@@ -64,13 +65,16 @@ public abstract class Menu {
     private static void initMenus2() {
         MENUS.put("current-members", new MembersListMenu());
         MENUS.put("invite-members", new InviteMenu());
+        MENUS.put("faction-top", new FactionTopMenu());
 
         CustomButton.BUTTONS.put("yourself", new YourselfButton());
+        CustomButton.BUTTONS.put("claim-on", new ClaimOnButton());
     }
 
     public static NamespacedKey MENU_NAMESPACE;
     public static NamespacedKey UUID_NAMESPACE;
     public static NamespacedKey TYPE_NAMESPACE;
+    public static NamespacedKey FACTION_NAMESPACE;
 
     private static Map<String, Menu> MENUS;
 
@@ -95,6 +99,10 @@ public abstract class Menu {
         static final HashMap<String, CustomButton> BUTTONS = new HashMap<>();
 
         public abstract ItemStack getItemStack(Player player);
+
+        public void runButtonClick(Player player) {
+
+        }
 
         public static CustomButton getButton(String name) {
             return BUTTONS.get(name);

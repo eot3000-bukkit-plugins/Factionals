@@ -28,7 +28,13 @@ public abstract class Serializer<T extends Savable> {
         serializer.factionals = Factionals.getFactionals();
 
         for(File file : serializer.dir().listFiles()) {
-            list.add(serializer.load(file));
+            X x = serializer.load(file);
+
+            if(x == null) {
+                continue;
+            }
+
+            list.add(x);
         }
 
         return list;

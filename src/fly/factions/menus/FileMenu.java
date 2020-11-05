@@ -48,7 +48,7 @@ public class FileMenu extends Menu {
 
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
             meta.setLore(Collections.singletonList(ChatColor.translateAlternateColorCodes('&', desc)));
-            meta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, name);
+            meta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, menuName);
 
             buttonItem.setItemMeta(meta);
 
@@ -61,8 +61,19 @@ public class FileMenu extends Menu {
     @Override
     public void runButtonClick(InventoryClickEvent event) {
         int slot = event.getSlot();
+        ItemStack stack = event.getCurrentItem();
 
         stacks.get(slot).getValue().execute((Player) event.getWhoClicked());
+
+        if(stack != null) {
+            PersistentDataContainer cont = stack.getItemMeta().getPersistentDataContainer();
+
+            if(cont.has(TYPE_NAMESPACE, PersistentDataType.STRING)) {
+                CustomButton.getButton(cont.get(TYPE_NAMESPACE, PersistentDataType.STRING)).runButtonClick((Player) event.getWhoClicked());
+            }
+        }
+
+        event.setCancelled(true);
     }
 
     @Override

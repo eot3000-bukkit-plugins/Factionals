@@ -25,9 +25,14 @@ public class FactionSerializer extends Serializer<Faction> {
     @Override
     public Faction load(File file) {
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+
+        if(configuration.getBoolean("deleted")) {
+            return null;
+        }
+
         String name = configuration.getString("name");
         User user = factionals.getUserFromUUID(UUID.fromString(configuration.getString("leader")));
-        Faction faction = new Faction(name, user);
+        Faction faction = new Faction(name, user, configuration.getLong("creation-date"));
 
         for(String uuid : configuration.getStringList("members")) {
             faction.addMember(factionals.getUserFromUUID(UUID.fromString(uuid)));
@@ -48,9 +53,11 @@ public class FactionSerializer extends Serializer<Faction> {
         config.set("leader", ((User) savable.getLeader()).getUuid().toString());
         config.set("name", savable.getName());
         config.set("members", members);
+        config.set("creation-date", savable.getCreationDate());
+        config.set("deleted", savable.isDeleted());
 
         try {
-            config.save(new File(dir.getPath() + "\\" + savable.getName()));
+            config.save(new File(dir.getPath() + "\\" + savable.getCreationDate()));
         } catch (IOException e) {
             //
         }
