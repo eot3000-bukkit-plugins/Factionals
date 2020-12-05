@@ -10,17 +10,17 @@ public abstract class PlayerGroup implements EconomyMember {
     protected boolean deleted;
 
     protected String name;
-    protected EconomyMember leader;
+    protected User leader;
     protected Set<User> members = new HashSet<>();
 
-    public PlayerGroup(String name, EconomyMember leader) {
+    public PlayerGroup(String name, User leader) {
         this.name = name;
         this.leader = leader;
 
         this.creationDate = System.currentTimeMillis();
     }
 
-    public PlayerGroup(String name, EconomyMember leader, long millis) {
+    public PlayerGroup(String name, User leader, long millis) {
         this.name = name;
         this.leader = leader;
 
@@ -31,7 +31,7 @@ public abstract class PlayerGroup implements EconomyMember {
         return name;
     }
 
-    public EconomyMember getLeader() {
+    public User getLeader() {
         return leader;
     }
 
@@ -39,7 +39,7 @@ public abstract class PlayerGroup implements EconomyMember {
         return new HashSet<>(members);
     }
 
-    public void setLeader(EconomyMember leader) {
+    public void setLeader(User leader) {
         this.leader = leader;
     }
 

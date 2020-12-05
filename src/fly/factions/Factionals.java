@@ -2,17 +2,15 @@ package fly.factions;
 
 import com.destroystokyo.paper.Title;
 import fly.factions.menus.Menu;
+import fly.factions.dynmap.DynmapFactionPlugin;
 import fly.factions.model.Faction;
 import fly.factions.model.Plot;
 import fly.factions.model.User;
 import fly.factions.serialization.FactionSerializer;
 import fly.factions.serialization.Serializer;
 import fly.factions.serialization.UserSerializer;
-import javafx.util.Pair;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,15 +21,23 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.dynmap.DynmapAPI;
+import org.dynmap.markers.MarkerSet;
 
 import java.io.File;
 import java.util.*;
 import java.util.logging.Logger;
 
 public class Factionals extends JavaPlugin implements Listener {
+
+    public List<ItemStack> colors = new ArrayList<>();
+
     private Economy economy;
 
     private static Factionals FACTIONALS;
@@ -43,6 +49,8 @@ public class Factionals extends JavaPlugin implements Listener {
 
     private FactionSerializer factionSerializer = new FactionSerializer();
     private UserSerializer userSerializer = new UserSerializer();
+
+    private MarkerSet markerSet;
 
     public Factionals() {
         FACTIONALS = this;
@@ -117,6 +125,31 @@ public class Factionals extends JavaPlugin implements Listener {
         }
 
         Menu.init();
+
+        /*int count = 0;
+
+        for(int v = 0; v < 5; v++) {
+            for(int s = 0; s < 6; s++) {
+                for(int h = 0; h < 9; h++) {
+                    double h2 = h/8.1;
+                    double s2 = s/1.0;
+                    double v2 = v/4.0;
+
+                    ItemStack stack = new ItemStack(Material.LEATHER_CHESTPLATE);
+                    LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
+
+                    meta.setColor(hsvToRgb(h2, s2, v2));
+                    meta.getPersistentDataContainer().set(Menu.MENU_NAMESPACE, PersistentDataType.STRING, "colors1");
+                    meta.setDisplayName("" + count++);
+
+                    stack.setItemMeta(meta);
+
+                    colors.add(stack);
+                }
+            }
+        }*/
+
+        //TODO: FIX THIS HUJDsinjkfjKHJENUDIWQHG(OI#@HNFuiwh9832rhiuewdnsaio
     }
 
     @Override
@@ -129,6 +162,13 @@ public class Factionals extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Menu.openMenu((Player) sender, "main-menu");
         return true;
+    }
+
+    @EventHandler
+    public void onPluginEnable(PluginEnableEvent event) {
+        if(event.getPlugin() instanceof DynmapAPI) {
+            new DynmapFactionPlugin().activate((DynmapAPI) event.getPlugin());
+        }
     }
 
     @EventHandler
@@ -196,6 +236,10 @@ public class Factionals extends JavaPlugin implements Listener {
                             Faction faction = plots.get(plotId);
                             String chunkAddition;
 
+                            if(faction == null || faction.isDeleted()) {
+                                faction = null;
+                            }
+
                             if(xm == x && zm == z) {
                                 chunkAddition = ChatColor.BLACK + "";
                             } else if(faction == null) {
@@ -250,7 +294,9 @@ public class Factionals extends JavaPlugin implements Listener {
             }
         }
 
-        if(plotFaction == faction) {
+        String permissionsList = plotFaction.getPlots().get(x).getKey();
+
+        if(permissionsList.contains("u" + user.getUuid().toString()) || permissionsList.contains("f" + faction.getName())) {
             return;
         }
 

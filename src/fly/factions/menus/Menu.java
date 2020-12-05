@@ -33,6 +33,12 @@ public abstract class Menu {
         UUID_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "uuid");
         TYPE_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "type");
         FACTION_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "faction");
+        WORLD_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "world");
+        X_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "x");
+        Y_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "y");
+        Z_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "z");
+        NUMBER_NAMESPACE = new NamespacedKey(Factionals.getFactionals(), "number-namespace");
+
         MENUS = new HashMap<>();
 
         File file = new File("./plugins/Factionals/menus.yml");
@@ -66,6 +72,13 @@ public abstract class Menu {
         MENUS.put("current-members", new MembersListMenu());
         MENUS.put("invite-members", new InviteMenu());
         MENUS.put("faction-top", new FactionTopMenu());
+        MENUS.put("plot-perms", new PlotPermissionMenu());
+        MENUS.put("colors1", new ColorsMenu(0));
+        MENUS.put("colors2", new ColorsMenu(1));
+        MENUS.put("colors3", new ColorsMenu(2));
+        MENUS.put("colors4", new ColorsMenu(3));
+        MENUS.put("colors5", new ColorsMenu(4));
+        MENUS.put("colors6", new ColorsMenu(5));
 
         CustomButton.BUTTONS.put("yourself", new YourselfButton());
         CustomButton.BUTTONS.put("claim-on", new ClaimOnButton());
@@ -75,6 +88,11 @@ public abstract class Menu {
     public static NamespacedKey UUID_NAMESPACE;
     public static NamespacedKey TYPE_NAMESPACE;
     public static NamespacedKey FACTION_NAMESPACE;
+    public static NamespacedKey WORLD_NAMESPACE;
+    public static NamespacedKey X_NAMESPACE;
+    public static NamespacedKey Y_NAMESPACE;
+    public static NamespacedKey Z_NAMESPACE;
+    public static NamespacedKey NUMBER_NAMESPACE;
 
     private static Map<String, Menu> MENUS;
 
@@ -86,6 +104,10 @@ public abstract class Menu {
     }
 
     public static void buttonClicked(InventoryClickEvent event, String id) {
+        if(id.equalsIgnoreCase("no-action")) {
+            return;
+        }
+
         MENUS.get(id).runButtonClick(event);
 
         event.setCancelled(true);

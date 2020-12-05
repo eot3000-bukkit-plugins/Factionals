@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class Faction extends PlayerGroup {
     private static Factionals factionals = Factionals.getFactionals();
-    private static Map<Integer, Pair<String, int[]>> plots = new HashMap<>();
+    private Map<Integer, Pair<String, int[]>> plots = new HashMap<>();
 
     public Faction(String name, User leader) {
         super(name, leader);
@@ -68,6 +68,10 @@ public class Faction extends PlayerGroup {
         }
     }
 
+    public void setPlot(int location, Pair<String, int[]> data) {
+        plots.put(location, data);
+    }
+
     public void processLandClaim(String args, Location location) {
         if(args.startsWith("o")) {
             int i = Plot.getLocationId(location);
@@ -76,8 +80,12 @@ public class Faction extends PlayerGroup {
             perms[0] = 1;
 
             factionals.setPlot(i, this);
-            plots.put(i, new Pair<>("f" + name + "=0", perms));
+            plots.put(i, new Pair<>("f" + name + ";", perms));
         }
+    }
+
+    public Map<Integer, Pair<String, int[]>> getPlots() {
+        return new HashMap<>(plots);
     }
 
     @Override
