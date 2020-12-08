@@ -78,7 +78,7 @@ public class FactionSerializer extends Serializer<Faction> {
             plots.put(plot.getKey(), plotMap);
         }
 
-        config.set("leader", ((User) savable.getLeader()).getUuid().toString());
+        config.set("leader", (savable.getLeader()).getUuid().toString());
         config.set("name", savable.getName());
         config.set("members", members);
         config.set("creation-date", savable.getCreationDate());

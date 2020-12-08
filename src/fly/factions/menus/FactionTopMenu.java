@@ -60,21 +60,23 @@ public class FactionTopMenu extends Menu {
         inventory = Bukkit.createInventory(player, 27, ChatColor.translateAlternateColorCodes('&', "&6Faction Top"));
 
         for (Faction faction : Factionals.getFactionals().getFactions()) {
-            ItemStack itemStack = new ItemStack(Material.WHITE_BANNER);
-            ItemMeta itemMeta = itemStack.getItemMeta();
+            if(!faction.isDeleted()) {
+                ItemStack itemStack = new ItemStack(faction.getBanner());
+                ItemMeta itemMeta = itemStack.getItemMeta();
 
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c" + faction.getName()));
-            itemMeta.setLore(Arrays.asList(
-                    ChatColor.GOLD + "Leader: " + ((User) faction.getLeader()).getName(),
-                    ChatColor.YELLOW + "Balance: " + faction.getMoney(),
-                    ChatColor.GOLD + "Member Count: " + faction.getMembers().size()
-            ));
-            itemMeta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, "faction-top");
-            itemMeta.getPersistentDataContainer().set(FACTION_NAMESPACE, PersistentDataType.STRING, faction.getName());
+                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&c" + faction.getName()));
+                itemMeta.setLore(Arrays.asList(
+                        ChatColor.GOLD + "Leader: " + faction.getLeader().getName(),
+                        ChatColor.YELLOW + "Balance: " + faction.getMoney(),
+                        ChatColor.GOLD + "Member Count: " + faction.getMembers().size()
+                ));
+                itemMeta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, "faction-top");
+                itemMeta.getPersistentDataContainer().set(FACTION_NAMESPACE, PersistentDataType.STRING, faction.getName());
 
-            itemStack.setItemMeta(itemMeta);
+                itemStack.setItemMeta(itemMeta);
 
-            inventory.addItem(itemStack);
+                inventory.addItem(itemStack);
+            }
         }
 
         return inventory;

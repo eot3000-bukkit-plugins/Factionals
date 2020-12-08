@@ -4,6 +4,7 @@ import com.destroystokyo.paper.Title;
 import fly.factions.menus.Menu;
 import fly.factions.dynmap.DynmapFactionPlugin;
 import fly.factions.model.Faction;
+import fly.factions.model.Permission;
 import fly.factions.model.Plot;
 import fly.factions.model.User;
 import fly.factions.serialization.FactionSerializer;
@@ -86,7 +87,7 @@ public class Factionals extends JavaPlugin implements Listener {
 
     public void deleteFaction(Faction faction) {
         for(Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(ChatColor.YELLOW + "THE FACTION " + ChatColor.GREEN + faction.getName() + ChatColor.YELLOW + " HAS BEEN DELETED");
+            player.sendMessage(ChatColor.YELLOW + "The faction " + ChatColor.GREEN + faction.getName() + ChatColor.YELLOW + " has been deleted. We won't miss you lol");
         }
 
         factions.remove(faction.getName());
@@ -200,7 +201,7 @@ public class Factionals extends JavaPlugin implements Listener {
 
         if(user.isClaimMode()) {
             if(message.startsWith("c ")) {
-                if(user.getFaction() != null && user.getFaction().getLeader().equals(user)) {
+                if(user.getFaction() != null && user.getFaction().hasPermission(user, Permission.TERRITORY)) {
                     user.getFaction().processLandClaim(message.replaceFirst("c ", ""), event.getPlayer().getLocation());
                     return;
                 }
@@ -285,18 +286,18 @@ public class Factionals extends JavaPlugin implements Listener {
         Faction faction = user.getFaction();
         Faction plotFaction = plots.get(x);
 
-
         if(plotFaction == null) {
             return;
         } else {
             if(plotFaction.isDeleted()) {
                 plots.remove(x);
+                return;
             }
         }
 
         String permissionsList = plotFaction.getPlots().get(x).getKey();
 
-        if(permissionsList.contains("u" + user.getUuid().toString()) || permissionsList.contains("f" + faction.getName())) {
+        if(permissionsList.contains("u" + user.getUuid().toString()) || permissionsList.contains("f" + faction.getName()) || faction.hasPermission(user, Permission.USE_ALL)) {
             return;
         }
 

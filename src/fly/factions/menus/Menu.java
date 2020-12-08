@@ -73,6 +73,9 @@ public abstract class Menu {
         MENUS.put("invite-members", new InviteMenu());
         MENUS.put("faction-top", new FactionTopMenu());
         MENUS.put("plot-perms", new PlotPermissionMenu());
+        MENUS.put("banners", new BannerMenu());
+        MENUS.put("regions", new RegionsMenu());
+
         MENUS.put("colors1", new ColorsMenu(0));
         MENUS.put("colors2", new ColorsMenu(1));
         MENUS.put("colors3", new ColorsMenu(2));

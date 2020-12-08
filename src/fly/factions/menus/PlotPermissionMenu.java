@@ -49,7 +49,7 @@ public class PlotPermissionMenu extends Menu {
             });
         }
         if(event.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
-            Menu.openMenu((Player) event.getWhoClicked(), plotLocation + ";" + "u;" + container.get(UUID_NAMESPACE, PersistentDataType.STRING));
+            Menu.openMenu((Player) event.getWhoClicked(), plotLocation + ";" + "u" + container.get(UUID_NAMESPACE, PersistentDataType.STRING));
         }
     }
 
@@ -62,7 +62,7 @@ public class PlotPermissionMenu extends Menu {
         Inventory inventory;
         Faction faction = Factionals.getFactionals().getPlotOwner(plotId);
 
-        if(options.length == 0) {
+        if(options.length == 1) {
             inventory = Bukkit.createInventory(player, 27, "&4Edit permissions");
 
             if (!(faction == null || faction.isDeleted())) {
@@ -86,7 +86,7 @@ public class PlotPermissionMenu extends Menu {
 
                         inventory.addItem(stack);
                     }
-                    if (member.startsWith("f")) {
+                    if (a(member).startsWith("f")) {
                         member = member.replaceFirst("f", "");
 
                         ItemStack stack = new ItemStack(Material.WHITE_BANNER);
@@ -95,7 +95,7 @@ public class PlotPermissionMenu extends Menu {
                         meta.setDisplayName(ChatColor.RED + member);
                         meta.getPersistentDataContainer().set(MENU_NAMESPACE, PersistentDataType.STRING, "plot-perms");
                         meta.getPersistentDataContainer().set(UUID_NAMESPACE, PersistentDataType.STRING, member);
-                        meta.getPersistentDataContainer().set(X_NAMESPACE, PersistentDataType.INTEGER, plotId);
+                        meta.getPersistentDataContainer().set(NUMBER_NAMESPACE, PersistentDataType.INTEGER, plotId);
 
                         stack.setItemMeta(meta);
 
@@ -130,6 +130,17 @@ public class PlotPermissionMenu extends Menu {
         inventory.addItem(addition);
 
         return inventory;
+    }
+
+    //Simple method to make the faction correctly formatted so that stuff won't break
+    private String a(String stuff) {
+        String[] split = stuff.split(";")[0].split(" ");
+
+        if(split.length > 1) {
+            return split[1];
+        }
+
+        return split[0];
     }
 
     private int getBit(int n, int k) {

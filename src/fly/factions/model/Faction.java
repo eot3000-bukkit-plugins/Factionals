@@ -4,7 +4,9 @@ import fly.factions.messages.Messages;
 import javafx.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,8 @@ import java.util.Map;
 public class Faction extends PlayerGroup {
     private static Factionals factionals = Factionals.getFactionals();
     private Map<Integer, Pair<String, int[]>> plots = new HashMap<>();
+    private ItemStack banner;
+    private Map<String, Region> regions = new HashMap<>();
 
     public Faction(String name, User leader) {
         super(name, leader);
@@ -68,6 +72,26 @@ public class Faction extends PlayerGroup {
         }
     }
 
+    public boolean hasPermission(User user, Permission perm) {
+        return leader.equals(user);
+    }
+
+    public ItemStack getBanner() {
+        return banner == null ? new ItemStack(Material.WHITE_BANNER) : banner;
+    }
+
+    public void setBanner(ItemStack banner) {
+        this.banner = banner;
+    }
+
+    public Map<String, Region> getRegions() {
+        return new HashMap<>(regions);
+    }
+
+    public void addRegion(Region region) {
+        regions.put(region.getName(), region);
+    }
+
     public void setPlot(int location, Pair<String, int[]> data) {
         plots.put(location, data);
     }
@@ -82,6 +106,29 @@ public class Faction extends PlayerGroup {
             factionals.setPlot(i, this);
             plots.put(i, new Pair<>("f" + name + ";", perms));
         }
+
+        if(args.startsWith("r")) {
+            int i = Plot.getLocationId(location);
+            Region region = regions.get(args.split(" ")[1]);
+
+            if (factionals.getPlotOwner(i).equals(this)) {
+                Pair<String, int[]> plotInfo = plots.get(i);
+                Pair<String, int[]> newInfo = new Pair<>(region.getName() + " " + a(plotInfo.getKey()), plotInfo.getValue());
+
+                plots.put(i, newInfo);
+            }
+        }
+    }
+
+    //Simple method to make the faction correctly formatted so that stuff won't break
+    private String a(String stuff) {
+        String[] split = stuff.split(";")[0].split(" ");
+
+        if(split.length > 1) {
+            return split[1];
+        }
+
+        return split[0];
     }
 
     public Map<Integer, Pair<String, int[]>> getPlots() {

@@ -5,41 +5,6 @@ menus:
       id: LIGHT_GRAY_STAINED_GLASS_PANE
       name: " "
 
-    2:
-      id: RED_DYE
-      name: "&cColors 1"
-      action:
-        type: open-menu
-        info: colors1
-
-    3:
-      id: LIME_DYE
-      name: "&aColors 2"
-      action:
-        type: open-menu
-        info: colors2
-
-    4:
-      id: ORANGE_DYE
-      name: "&6Colors 3"
-      action:
-        type: open-menu
-        info: colors3
-
-    5:
-      id: BLUE_DYE
-      name: "&1Colors 4"
-      action:
-        type: open-menu
-        info: colors4
-
-    6:
-      id: YELLOW_DYE
-      name: "&dColors 5"
-      action:
-        type: open-menu
-        info: colors5
-
     11:
       id: RED_STAINED_GLASS_PANE
       name: "&cFactions Management"
@@ -47,7 +12,7 @@ menus:
         type: open-menu
         info: faction-menu
 
-    14:
+    15:
       id: LIGHT_BLUE_STAINED_GLASS_PANE
       name: "&bPlot Management"
       action:
@@ -139,6 +104,18 @@ menus:
     default:
       id: LIGHT_GRAY_STAINED_GLASS_PANE
       name: " "
+    0:
+      id: SWEET_BERRIES
+      name: "&cRegions"
+      action:
+        type: open-menu
+        info: regions
+    #1:
+     # id: RED_DYE
+      #type: "fill-color"
+    #2:
+     # id: LIME_DYE
+      #type: "border-color"
 
     10:
       id: ARMOR_STAND

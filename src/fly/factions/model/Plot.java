@@ -54,6 +54,10 @@ public class Plot {
         return ((x+2048) | ((z+2048) << 12)) | (world.getEnvironment().getId() << 24);
     }
 
+    public static Integer getLocationId(int x, int z, int world) {
+        return ((x+2048) | ((z+2048) << 12)) | (world << 24);
+    }
+
     public static int getX(int location) {
         return (location & getXMask)-2048;
     }
