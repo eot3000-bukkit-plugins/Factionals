@@ -1,15 +1,17 @@
 package fly.factions;
 
-import com.destroystokyo.paper.Title;
-import fly.factions.menus.Menu;
-import fly.factions.dynmap.DynmapFactionPlugin;
-import fly.factions.model.Faction;
-import fly.factions.model.Permission;
-import fly.factions.model.Plot;
-import fly.factions.model.User;
-import fly.factions.serialization.FactionSerializer;
-import fly.factions.serialization.Serializer;
-import fly.factions.serialization.UserSerializer;
+import fly.factions.api.model.Faction;
+import fly.factions.api.model.Plot;
+import fly.factions.api.model.User;
+import fly.factions.api.registries.Registry;
+import fly.factions.impl.commands.FactionCommand;
+//import fly.factions.impl.listeners.ChatListener;
+import fly.factions.impl.listeners.JoinLeaveListener;
+//import fly.factions.impl.listeners.MenusListener;
+import fly.factions.impl.registries.RegistryImpl;
+import fly.factions.impl.serialization.FactionSerializer;
+import fly.factions.api.serialization.Serializer;
+import fly.factions.impl.serialization.UserSerializer;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -17,16 +19,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.MarkerSet;
@@ -36,20 +31,14 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class Factionals extends JavaPlugin implements Listener {
+    private Map<Class<?>, Registry> registries = new HashMap<>();
 
-    public List<ItemStack> colors = new ArrayList<>();
+    private FactionCommand factionCommand;
 
     private Economy economy;
 
     private static Factionals FACTIONALS;
     private Logger logger = Bukkit.getLogger();
-
-    private Map<String, Faction> factions = new HashMap<>();
-    private Map<Integer, Faction> plots = new HashMap<>();
-    private Map<UUID, User> users = new HashMap<>();
-
-    private FactionSerializer factionSerializer = new FactionSerializer();
-    private UserSerializer userSerializer = new UserSerializer();
 
     private MarkerSet markerSet;
 
@@ -61,71 +50,46 @@ public class Factionals extends JavaPlugin implements Listener {
         return FACTIONALS;
     }
 
-    public User getUserFromPlayer(Player player) {
-        return getUserFromUUID(player.getUniqueId());
-    }
-
-    public User getUserFromName(String player) {
-        return getUserFromUUID(Bukkit.getPlayerUniqueId(player));
-    }
-
-    public User getUserFromUUID(UUID player) {
-        return users.get(player);
-    }
-
-    public void addFaction(Faction faction) {
-        factions.put(faction.getName(), faction);
-    }
-
-    public Faction getFactionByName(String string) {
-        return factions.get(string);
-    }
-
-    public List<Faction> getFactions() {
-        return new ArrayList<>(factions.values());
-    }
-
-    public void deleteFaction(Faction faction) {
-        for(Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(ChatColor.YELLOW + "The faction " + ChatColor.GREEN + faction.getName() + ChatColor.YELLOW + " has been deleted. We won't miss you lol");
-        }
-
-        factions.remove(faction.getName());
-    }
-
-    public void setPlot(int x, Faction f) {
-        plots.put(x, f);
-    }
-
-    public Faction getPlotOwner(int x) {
-        return plots.get(x);
-    }
 
     @Override
     public void onEnable() {
-        System.out.println(new File("").getAbsolutePath());
-
         logger.info(ChatColor.DARK_AQUA + "---------------------------------------------");
         logger.info(ChatColor.AQUA + "Starting Factionals!");
         logger.info(ChatColor.DARK_AQUA + "---------------------------------------------");
 
-        Bukkit.getPluginManager().registerEvents(this, this);
+
+        registries.put(Faction.class, new RegistryImpl<Faction, String>(Faction.class));
+        registries.put(Serializer.class, new RegistryImpl<Serializer, Class>(Serializer.class));
+        registries.put(User.class, new RegistryImpl<User, UUID>(User.class));
+        registries.put(Plot.class, new RegistryImpl<Plot, Integer>(Plot.class));
+
+
+        new FactionSerializer(this);
+        new UserSerializer(this);
+
+
+        new JoinLeaveListener();
+        //new ChatListener();
+        //new MenusListener();
+
 
         economy = Bukkit.getServicesManager().getRegistration(Economy.class).getProvider();
+
+
+        factionCommand = new FactionCommand(this);
+
 
         Collection<User> userList = Serializer.loadAll(User.class);
 
         for(User user : userList) {
-            users.put(user.getUuid(), user);
+            registries.get(User.class).set(user.getUniqueId(), user);
         }
 
         Collection<Faction> factionList = Serializer.loadAll(Faction.class);
 
         for(Faction faction : factionList) {
-            factions.put(faction.getName(), faction);
+            registries.get(Faction.class).set(faction.getName(), faction);
         }
-
-        Menu.init();
 
         /*int count = 0;
 
@@ -140,7 +104,7 @@ public class Factionals extends JavaPlugin implements Listener {
                     LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
 
                     meta.setColor(hsvToRgb(h2, s2, v2));
-                    meta.getPersistentDataContainer().set(Menu.MENU_NAMESPACE, PersistentDataType.STRING, "colors1");
+                    meta.getPersistentDataContainer().set(MenuType.MENU_NAMESPACE, PersistentDataType.STRING, "colors1");
                     meta.setDisplayName("" + count++);
 
                     stack.setItemMeta(meta);
@@ -153,133 +117,56 @@ public class Factionals extends JavaPlugin implements Listener {
         //TODO: FIX THIS HUJDsinjkfjKHJENUDIWQHG(OI#@HNFuiwh9832rhiuewdnsaio
     }
 
+    private List<Faction> menuListable(User user) {
+        return new ArrayList<>(getRegistry(Faction.class).list());
+    }
+
+    /*private OpenedMenu.Button menuButton(Material material, String name, String button) {
+        return new OpenedMenu.Button((x, y) -> x.setMenu(((Registry<MenuType, String>) getRegistry(MenuType.class)).get(button).create(x))) {
+            @Override
+            public ItemStack getItem() {
+                ItemStack stack = new ItemStack(material);
+                ItemMeta meta = stack.getItemMeta();
+
+                meta.setDisplayName(name);
+
+                stack.setItemMeta(meta);
+
+                return stack;
+            }
+        };
+    }*/
+
+    @SuppressWarnings("unchecked")
+    public <V> Registry<V, ?> getRegistry(Class<V> clazz) {
+        return (Registry<V, ?>) registries.get(clazz);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <V, K> Registry<V, K> getRegistry(Class<V> clazz, Class<K> clazz2) {
+        return (Registry<V, K>) registries.get(clazz);
+    }
+
     @Override
     public void onDisable() {
-        Serializer.saveAll(factions.values());
-        Serializer.saveAll(users.values());
+        Serializer.saveAll(registries.get(Faction.class).list(), Faction.class);
+        Serializer.saveAll(registries.get(User.class).list(), User.class);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Menu.openMenu((Player) sender, "main-menu");
+
         return true;
     }
 
     @EventHandler
     public void onPluginEnable(PluginEnableEvent event) {
         if(event.getPlugin() instanceof DynmapAPI) {
-            new DynmapFactionPlugin().activate((DynmapAPI) event.getPlugin());
+            //new DynmapFactionPlugin().activate((DynmapAPI) event.getPlugin());
         }
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        if(getUserFromPlayer(event.getPlayer()) == null) {
-            users.put(event.getPlayer().getUniqueId(), new User(event.getPlayer().getUniqueId()));
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        if(event.getCurrentItem() == null) {
-            return;
-        }
-
-        PersistentDataContainer container = event.getCurrentItem().getItemMeta().getPersistentDataContainer();
-
-        if(container.has(Menu.MENU_NAMESPACE, PersistentDataType.STRING)) {
-            Menu.buttonClicked(event, container.get(Menu.MENU_NAMESPACE, PersistentDataType.STRING));
-        }
-    }
-
-    @EventHandler
-    public void onChatUse(AsyncPlayerChatEvent event) {
-        event.setCancelled(true);
-
-        User user = getUserFromPlayer(event.getPlayer());
-        String message = event.getMessage();
-
-        if(user.isClaimMode()) {
-            if(message.startsWith("c ")) {
-                if(user.getFaction() != null && user.getFaction().hasPermission(user, Permission.TERRITORY)) {
-                    user.getFaction().processLandClaim(message.replaceFirst("c ", ""), event.getPlayer().getLocation());
-                    return;
-                }
-            }
-            if(message.startsWith("map ")) {
-                try {
-                    Faction userFaction = getUserFromPlayer(event.getPlayer()).getFaction();
-
-                    List<Character> characters = new ArrayList<>(Arrays.asList('#', '&', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'));
-                    Map<Faction, Character> factionCharacters = new HashMap<>();
-
-                    String[] split = message.split(" ");
-
-                    int height = Integer.parseInt(split[1])*2+1;
-                    int width = Integer.parseInt(split[2])*2+1;
-
-                    int xb = event.getPlayer().getLocation().getChunk().getX();
-                    int zb = event.getPlayer().getLocation().getChunk().getZ();
-                    World w = event.getPlayer().getLocation().getWorld();
-
-                    int xm = (int) Math.floor(height/2);
-                    int zm = (int) Math.floor(width/2);
-
-                    List<String> ret = new ArrayList<>();
-
-                    factionCharacters.put(null, '-');
-
-                    for(int z = 0; z < height; z++) {
-                        String line = "";
-
-                        for(int x = 0; x < width; x++) {
-                            int plotId = Plot.getLocationId((xb+x)-xm, (zb+z)-zm, w);
-                            Faction faction = plots.get(plotId);
-                            String chunkAddition;
-
-                            if(faction == null || faction.isDeleted()) {
-                                faction = null;
-                            }
-
-                            if(xm == x && zm == z) {
-                                chunkAddition = ChatColor.BLACK + "";
-                            } else if(faction == null) {
-                                chunkAddition = ChatColor.GRAY + "";
-                            } else if(faction.equals(userFaction)) {
-                                chunkAddition = ChatColor.GREEN + "";
-                            } else {
-                                chunkAddition = ChatColor.DARK_GRAY + "";
-                            }
-
-                            if(faction != null && !factionCharacters.containsKey(faction)) {
-                                factionCharacters.put(faction, characters.get(0));
-                                characters.remove(0);
-                            }
-
-                            chunkAddition+=factionCharacters.get(faction);
-
-                            line+=chunkAddition;
-                        }
-                        ret.add(line);
-                    }
-
-                    for(String string : ret) {
-                        event.getPlayer().sendMessage(string);
-                    }
-
-                    return;
-                } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
-                    //
-                }
-            }
-        }
-
-        event.setCancelled(false);
-
-        user.onChat(event);
-    }
-
-    @EventHandler
+    /*@EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         int x = Plot.getLocationId(event.getClickedBlock().getLocation());
         User user = getUserFromPlayer(event.getPlayer());
@@ -316,7 +203,7 @@ public class Factionals extends JavaPlugin implements Listener {
         if(factionTo == null) {
             event.getPlayer().sendTitle(new Title(ChatColor.DARK_GREEN + "Entering Wilderness!", "", 5, 10, 5));
         } else {
-            event.getPlayer().sendTitle(new Title(ChatColor.GREEN + "Entering " + ChatColor.YELLOW + factionTo.getName() + ChatColor.GREEN + "!", "", 5, 10, 5));
+            event.getPlayer().sendTitle(new Title(ChatColor.GREEN + "Entering " + ChatColor.YELLOW + factionTo.name() + ChatColor.GREEN + "!", "", 5, 10, 5));
         }
-    }
+    }*/
 }

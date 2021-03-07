@@ -11,9 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fly.factions.Factionals;
-import fly.factions.model.Faction;
-import fly.factions.model.Plot;
-import fly.factions.model.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,7 +26,7 @@ import org.dynmap.markers.MarkerIcon;
 import org.dynmap.markers.MarkerSet;
 
 public class DynmapFactionPlugin {
-    private static Logger log;
+    /*private static Logger log;
     private static final String DEF_INFOWINDOW = "<div class=\"infowindow\"><span style=\"font-size:120%;\">%regionname%</span><br />Flags<br /><span style=\"font-weight:bold;\">%flags%</span></div>";
     Plugin dynmap;
     DynmapAPI api;
@@ -142,7 +139,7 @@ public class DynmapFactionPlugin {
         v = v.replace("%playermembers%", res);
 
         v = v.replace("%nation%", ChatColor.stripColor(fact.getName()));
-        /* Build flags */
+        // Build flags
         String flgs = "No flags looooool";
         v = v.replace("%flags%", flgs);
         return v;
@@ -171,9 +168,9 @@ public class DynmapFactionPlugin {
 
     enum direction { XPLUS, ZPLUS, XMINUS, ZMINUS };
 
-    /**
+    //*
      * Find all contiguous blocks, set in target and clear in source
-     */
+
     private int floodFillTarget(TileFlags src, TileFlags dest, int x, int y) {
         int cnt = 0;
         ArrayDeque<int[]> stack = new ArrayDeque<int[]>();
@@ -183,9 +180,9 @@ public class DynmapFactionPlugin {
             int[] nxt = stack.pop();
             x = nxt[0];
             y = nxt[1];
-            if(src.getFlag(x, y)) { /* Set in src */
-                src.setFlag(x, y, false);   /* Clear source */
-                dest.setFlag(x, y, true);   /* Set in destination */
+            if(src.getFlag(x, y)) { // Set in src
+                src.setFlag(x, y, false);   // Clear source
+                dest.setFlag(x, y, true);   // Set in destination
                 cnt++;
                 if(src.getFlag(x+1, y))
                     stack.push(new int[] { x+1, y });
@@ -200,7 +197,7 @@ public class DynmapFactionPlugin {
         return cnt;
     }
 
-    private static class FactionBlock {
+    public static class FactionBlock {
         int x, z;
     }
 
@@ -208,27 +205,27 @@ public class DynmapFactionPlugin {
         Map<Integer, LinkedList<FactionBlock>> blocks = new HashMap<>();
     }
 
-    /* Handle specific faction on specific world */
+    // Handle specific faction on specific world
     private void handleFactionOnWorld(String factname, Faction fact, Integer world, LinkedList<FactionBlock> blocks, Map<String, AreaMarker> newmap, Map<String, Marker> newmark) {
         double[] x = null;
         double[] z = null;
-        int poly_index = 0; /* Index of polygon for given faction */
+        int poly_index = 0; // Index of polygon for given faction
 
-        /* Build popup */
+        // Build popup
         String desc = formatInfoWindow(fact);
 
-        /* Handle areas */
+        // Handle areas
         //if(isVisible(factname, world)) {
         if(blocks.isEmpty())
             return;
         LinkedList<FactionBlock> nodevals = new LinkedList<FactionBlock>();
         TileFlags curblks = new TileFlags();
-        /* Loop through blocks: set flags on blockmaps */
+        // Loop through blocks: set flags on blockmaps
         for(FactionBlock b : blocks) {
-            curblks.setFlag(b.x, b.z, true); /* Set flag for block */
+            curblks.setFlag(b.x, b.z, true); // Set flag for block
             nodevals.addLast(b);
         }
-        /* Loop through until we don't find more areas */
+        // Loop through until we don't find more areas
         while(nodevals != null) {
             LinkedList<FactionBlock> ournodes = null;
             LinkedList<FactionBlock> newlist = null;
@@ -238,15 +235,15 @@ public class DynmapFactionPlugin {
             for(FactionBlock node : nodevals) {
                 int nodex = node.x;
                 int nodez = node.z;
-                /* If we need to start shape, and this block is not part of one yet */
+                // If we need to start shape, and this block is not part of one yet
                 if((ourblks == null) && curblks.getFlag(nodex, nodez)) {
-                    ourblks = new TileFlags();  /* Create map for shape */
+                    ourblks = new TileFlags();  // Create map for shape
                     ournodes = new LinkedList<FactionBlock>();
-                    floodFillTarget(curblks, ourblks, nodex, nodez);   /* Copy shape */
-                    ournodes.add(node); /* Add it to our node list */
+                    floodFillTarget(curblks, ourblks, nodex, nodez);   // Copy shape
+                    ournodes.add(node); // Add it to our node list
                     minx = nodex; minz = nodez;
                 }
-                /* If shape found, and we're in it, add to our node list */
+                // If shape found, and we're in it, add to our node list
                 else if((ourblks != null) && ourblks.getFlag(nodex, nodez)) {
                     ournodes.add(node);
                     if(nodex < minx) {
@@ -256,14 +253,14 @@ public class DynmapFactionPlugin {
                         minz = nodez;
                     }
                 }
-                else {  /* Else, keep it in the list for the next polygon */
+                else {  // Else, keep it in the list for the next polygon
                     if(newlist == null) newlist = new LinkedList<FactionBlock>();
                     newlist.add(node);
                 }
             }
-            nodevals = newlist; /* Replace list (null if no more to process) */
+            nodevals = newlist; // Replace list (null if no more to process)
             if(ourblks != null) {
-                /* Trace outline of blocks - start from minx, minz going to x+ */
+                // Trace outline of blocks - start from minx, minz going to x+
                 int init_x = minx;
                 int init_z = minz;
                 int cur_x = minx;
@@ -273,65 +270,65 @@ public class DynmapFactionPlugin {
                 linelist.add(new int[] { init_x, init_z } ); // Add start point
                 while((cur_x != init_x) || (cur_z != init_z) || (dir != direction.ZMINUS)) {
                     switch(dir) {
-                        case XPLUS: /* Segment in X+ direction */
-                            if(!ourblks.getFlag(cur_x+1, cur_z)) { /* Right turn? */
-                                linelist.add(new int[] { cur_x+1, cur_z }); /* Finish line */
-                                dir = direction.ZPLUS;  /* Change direction */
+                        case XPLUS: // Segment in X+ direction
+                            if(!ourblks.getFlag(cur_x+1, cur_z)) { // Right turn?
+                                linelist.add(new int[] { cur_x+1, cur_z }); // Finish line
+                                dir = direction.ZPLUS;  // Change direction
                             }
-                            else if(!ourblks.getFlag(cur_x+1, cur_z-1)) {  /* Straight? */
+                            else if(!ourblks.getFlag(cur_x+1, cur_z-1)) {  // Straight?
                                 cur_x++;
                             }
-                            else {  /* Left turn */
-                                linelist.add(new int[] { cur_x+1, cur_z }); /* Finish line */
+                            else {  // Left turn
+                                linelist.add(new int[] { cur_x+1, cur_z }); // Finish line
                                 dir = direction.ZMINUS;
                                 cur_x++; cur_z--;
                             }
                             break;
-                        case ZPLUS: /* Segment in Z+ direction */
-                            if(!ourblks.getFlag(cur_x, cur_z+1)) { /* Right turn? */
-                                linelist.add(new int[] { cur_x+1, cur_z+1 }); /* Finish line */
-                                dir = direction.XMINUS;  /* Change direction */
+                        case ZPLUS: // Segment in Z+ direction
+                            if(!ourblks.getFlag(cur_x, cur_z+1)) { // Right turn?
+                                linelist.add(new int[] { cur_x+1, cur_z+1 }); // Finish line
+                                dir = direction.XMINUS;  // Change direction
                             }
-                            else if(!ourblks.getFlag(cur_x+1, cur_z+1)) {  /* Straight? */
+                            else if(!ourblks.getFlag(cur_x+1, cur_z+1)) {  // Straight?
                                 cur_z++;
                             }
-                            else {  /* Left turn */
-                                linelist.add(new int[] { cur_x+1, cur_z+1 }); /* Finish line */
+                            else {  // Left turn
+                                linelist.add(new int[] { cur_x+1, cur_z+1 }); // Finish line
                                 dir = direction.XPLUS;
                                 cur_x++; cur_z++;
                             }
                             break;
-                        case XMINUS: /* Segment in X- direction */
-                            if(!ourblks.getFlag(cur_x-1, cur_z)) { /* Right turn? */
-                                linelist.add(new int[] { cur_x, cur_z+1 }); /* Finish line */
-                                dir = direction.ZMINUS;  /* Change direction */
+                        case XMINUS: // Segment in X- direction
+                            if(!ourblks.getFlag(cur_x-1, cur_z)) { // Right turn?
+                                linelist.add(new int[] { cur_x, cur_z+1 }); // Finish line
+                                dir = direction.ZMINUS;  // Change direction
                             }
-                            else if(!ourblks.getFlag(cur_x-1, cur_z+1)) {  /* Straight? */
+                            else if(!ourblks.getFlag(cur_x-1, cur_z+1)) {  // Straight?
                                 cur_x--;
                             }
-                            else {  /* Left turn */
-                                linelist.add(new int[] { cur_x, cur_z+1 }); /* Finish line */
+                            else {  // Left turn
+                                linelist.add(new int[] { cur_x, cur_z+1 }); // Finish line
                                 dir = direction.ZPLUS;
                                 cur_x--; cur_z++;
                             }
                             break;
-                        case ZMINUS: /* Segment in Z- direction */
-                            if(!ourblks.getFlag(cur_x, cur_z-1)) { /* Right turn? */
-                                linelist.add(new int[] { cur_x, cur_z }); /* Finish line */
-                                dir = direction.XPLUS;  /* Change direction */
+                        case ZMINUS: // Segment in Z- direction
+                            if(!ourblks.getFlag(cur_x, cur_z-1)) { // Right turn?
+                                linelist.add(new int[] { cur_x, cur_z }); // Finish line
+                                dir = direction.XPLUS;  // Change direction
                             }
-                            else if(!ourblks.getFlag(cur_x-1, cur_z-1)) {  /* Straight? */
+                            else if(!ourblks.getFlag(cur_x-1, cur_z-1)) {  // Straight?
                                 cur_z--;
                             }
-                            else {  /* Left turn */
-                                linelist.add(new int[] { cur_x, cur_z }); /* Finish line */
+                            else {  // Left turn
+                                linelist.add(new int[] { cur_x, cur_z }); // Finish line
                                 dir = direction.XMINUS;
                                 cur_x--; cur_z--;
                             }
                             break;
                     }
                 }
-                /* Build information for specific area */
+                // Build information for specific area
                 String polyid = factname + "__" + world + "__" + poly_index;
                 int sz = linelist.size();
                 x = new double[sz];
@@ -341,8 +338,8 @@ public class DynmapFactionPlugin {
                     x[i] = (double)line[0] * (double)blocksize;
                     z[i] = (double)line[1] * (double)blocksize;
                 }
-                /* Find existing one */
-                AreaMarker m = resareas.remove(polyid); /* Existing area? */
+                // Find existing one
+                AreaMarker m = resareas.remove(polyid); // Existing area?
                 if(m == null) {
                     m = set.createAreaMarker(polyid, factname, false, worldFromId(world), x, z, false);
                     if(m == null) {
@@ -351,15 +348,15 @@ public class DynmapFactionPlugin {
                     }
                 }
                 else {
-                    m.setCornerLocations(x, z); /* Replace corner locations */
-                    m.setLabel(factname);   /* Update label */
+                    m.setCornerLocations(x, z); // Replace corner locations
+                    m.setLabel(factname);   // Update label
                 }
-                m.setDescription(desc); /* Set popup */
+                m.setDescription(desc); // Set popup
 
-                /* Set line and fill properties */
+                // Set line and fill properties
                 addStyle(factname, m);
 
-                /* Add to map */
+                // Add to map
                 newmap.put(polyid, m);
                 poly_index++;
             }
@@ -376,27 +373,27 @@ public class DynmapFactionPlugin {
         return "world";
     }
 
-    /* Update Factions information */
+    // Update Factions information
     private void updateFactions() {
-        Map<String,AreaMarker> newmap = new HashMap<String,AreaMarker>(); /* Build new map */
-        Map<String,Marker> newmark = new HashMap<String,Marker>(); /* Build new map */
+        Map<String,AreaMarker> newmap = new HashMap<String,AreaMarker>(); // Build new map
+        Map<String,Marker> newmark = new HashMap<String,Marker>(); // Build new map
 
-        /* Parse into faction centric mapping, split by world */
+        // Parse into faction centric mapping, split by world
         Map<String, FactionBlocks> blocks_by_faction = new HashMap<String, FactionBlocks>();
 
         Collection<Faction> facts = factapi.getFactions();
         for (Faction fact : facts) {
             Set<Integer> chunks = fact.getPlots().keySet();
             String fid = "Faction_" + fact.getCreationDate();
-            FactionBlocks factblocks = blocks_by_faction.get(fid); /* Look up faction */
-            if(factblocks == null) {    /* Create faction block if first time */
+            FactionBlocks factblocks = blocks_by_faction.get(fid); // Look up faction
+            if(factblocks == null) {    // Create faction block if first time
                 factblocks = new FactionBlocks();
                 blocks_by_faction.put(fid, factblocks);
             }
 
             for (Integer cc : chunks) {
 
-                /* Get block set for given world */
+                // Get block set for given world
                 LinkedList<FactionBlock> blocks = factblocks.blocks.get(Plot.getW(cc));
                 if(blocks == null) {
                     blocks = new LinkedList<>();
@@ -405,17 +402,17 @@ public class DynmapFactionPlugin {
                 FactionBlock fb = new FactionBlock();
                 fb.x = Plot.getX(cc);
                 fb.z = Plot.getZ(cc);
-                blocks.add(fb); /* Add to list */
+                blocks.add(fb); // Add to list
             }
         }
-        /* Loop through factions */
+        // Loop through factions
         for(Faction fact : facts) {
             String factname = ChatColor.stripColor(fact.getName());
             String fid = "Faction_" + fact.getCreationDate();
-            FactionBlocks factblocks = blocks_by_faction.get(fid); /* Look up faction */
+            FactionBlocks factblocks = blocks_by_faction.get(fid); // Look up faction
             if (factblocks == null) continue;
 
-            /* Loop through each world that faction has blocks on */
+            // Loop through each world that faction has blocks on
             for(Map.Entry<Integer, LinkedList<FactionBlock>>  worldblocks : factblocks.blocks.entrySet()) {
                 handleFactionOnWorld(factname, fact, worldblocks.getKey(), worldblocks.getValue(), newmap, newmark);
             }
@@ -423,14 +420,14 @@ public class DynmapFactionPlugin {
         }
         blocks_by_faction.clear();
 
-        /* Now, review old map - anything left is gone */
+        // Now, review old map - anything left is gone
         for(AreaMarker oldm : resareas.values()) {
             oldm.deleteMarker();
         }
         for(Marker oldm : resmark.values()) {
             oldm.deleteMarker();
         }
-        /* And replace with new map */
+        // And replace with new map
         resareas = newmap;
         resmark = newmark;
 
@@ -460,12 +457,12 @@ public class DynmapFactionPlugin {
             severe("Error loading dynmap marker API!");
             return;
         }
-        /* Connect to factions API */
+        // Connect to factions API
         factapi = Factionals.getFactionals();
 
-        blocksize = 16; /* Fixed at 16 */
+        blocksize = 16; // Fixed at 16
 
-        /* Load configuration */
+        // Load configuration
         if (reload) {
             //this.reloadConfig();
             if (set != null) {
@@ -476,7 +473,7 @@ public class DynmapFactionPlugin {
             reload = true;
         }
 
-        /* Now, add marker set for mobs (make it transient) */
+        // Now, add marker set for mobs (make it transient)
         set = markerapi.getMarkerSet("factions.markerset");
         if (set == null)
             set = markerapi.createMarkerSet("factions.markerset", "Factions", null, false);
@@ -486,7 +483,7 @@ public class DynmapFactionPlugin {
             severe("Error creating marker set");
             return;
         }
-        /* Make sure these are empty (on reload) */
+        // Make sure these are empty (on reload)
         resareas.clear();
         resmark.clear();
 
@@ -495,12 +492,12 @@ public class DynmapFactionPlugin {
         use3d = false;
         infowindow = DEF_INFOWINDOW;
 
-        /* Set up update job - based on periond */
+        // Set up update job - based on periond
         int per = 300;
         updperiod = (per * 20);
         stop = false;
 
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(factapi, new FactionsUpdate(), 40);   /* First time is 2 seconds */
-    }
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(factapi, new FactionsUpdate(), 40);   // First time is 2 seconds
+    }*/
 
 }
