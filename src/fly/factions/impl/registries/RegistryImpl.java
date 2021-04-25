@@ -1,8 +1,6 @@
 package fly.factions.impl.registries;
 
-import fly.factions.api.model.Savable;
 import fly.factions.api.registries.Registry;
-import fly.factions.api.serialization.Serializer;
 
 import java.util.*;
 
@@ -26,10 +24,6 @@ public class RegistryImpl<V, K> implements Registry<V, K> {
             map.put(key, value);
         } else {
             V v = map.remove(key);
-
-            if(v instanceof Savable) {
-                Serializer.saveAll(Collections.singletonList((Savable) v), clazz);
-            }
         }
     }
 

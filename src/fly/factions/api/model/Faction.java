@@ -1,5 +1,7 @@
 package fly.factions.api.model;
 
+import fly.factions.api.permissions.FactionPermission;
+
 import java.util.Collection;
 
 /**
@@ -105,4 +107,14 @@ public interface Faction extends LandAdministrator {
 
     @Deprecated
     void removeMember(User user);
+
+    /**
+     * Checks if a user has a specific permission in the faction
+     *
+     * @param user the user being checked
+     * @param permission the permission being checked
+     * @return {@code true} if the use has the permission, {@code false} if not
+     */
+
+    boolean hasPermission(User user, FactionPermission permission);
 }

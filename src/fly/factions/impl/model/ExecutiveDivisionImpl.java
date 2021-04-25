@@ -5,11 +5,13 @@ import fly.factions.api.model.Faction;
 import fly.factions.api.model.Plot;
 import fly.factions.api.model.User;
 import fly.factions.api.permissions.FactionPermission;
+import fly.factions.api.permissions.Permissibles;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 
 public class ExecutiveDivisionImpl implements ExecutiveDivision {
@@ -20,10 +22,15 @@ public class ExecutiveDivisionImpl implements ExecutiveDivision {
     private User leader;
     private List<User> workers = new ArrayList<>();
 
+    private EnumSet<FactionPermission> permissions = EnumSet.noneOf(FactionPermission.class);
+
     public ExecutiveDivisionImpl(String name, User leader, Faction faction) {
         this.name = name;
         this.leader = leader;
         this.faction = faction;
+
+        Permissibles.add(faction.getName() + ":" + name, this);
+        Permissibles.add(getId(), this);
     }
 
     @Override
@@ -34,11 +41,6 @@ public class ExecutiveDivisionImpl implements ExecutiveDivision {
     @Override
     public void setLeader(User leader) {
         this.leader = leader;
-    }
-
-    @Override
-    public boolean hasPermission(User user, FactionPermission permission) {
-        return false;
     }
 
     @Override
@@ -56,28 +58,28 @@ public class ExecutiveDivisionImpl implements ExecutiveDivision {
     }
 
     @Override
-    public double getMoney() {
+    public double getBalance() {
         return 0;
     }
 
     @Override
-    public void setMoney(double x) {
+    public void setBalance(double x) {
 
     }
 
     @Override
-    public void addMoney(double x) {
+    public void addToBalance(double x) {
 
     }
 
     @Override
-    public void takeMoney(double x) {
+    public void takeFromBalance(double x) {
 
     }
 
     @Override
     public String getId() {
-        return name + "_division_of_" + faction.getId();
+        return faction.getId() + "-department-" + name;
     }
 
     @Override
@@ -101,5 +103,25 @@ public class ExecutiveDivisionImpl implements ExecutiveDivision {
     @Override
     public Collection<User> getMembers() {
         return new ArrayList<>(workers);
+    }
+
+    @Override
+    public void addPermission(FactionPermission permission) {
+        permissions.add(permission);
+    }
+
+    @Override
+    public void removePermission(FactionPermission permission) {
+        permissions.remove(permission);
+    }
+
+    @Override
+    public boolean canDo(FactionPermission permission) {
+        return permissions.contains(permission);
+    }
+
+    @Override
+    public boolean userHasPlotPermissions(User user, boolean owner, boolean pub) {
+        return owner ? leader.equals(user) || faction.getLeader().equals(user) : pub ? faction.getMembers().contains(user) : workers.contains(user);
     }
 }

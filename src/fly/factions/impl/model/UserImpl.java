@@ -3,6 +3,7 @@ package fly.factions.impl.model;
 import fly.factions.Factionals;
 import fly.factions.api.model.Faction;
 import fly.factions.api.model.User;
+import fly.factions.api.permissions.Permissibles;
 import fly.factions.api.registries.Registry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -32,6 +33,9 @@ public class UserImpl implements User {
     public UserImpl(UUID uuid, String name) {
         this.uuid = uuid;
         this.name = name;
+
+        Permissibles.add(name, this);
+        Permissibles.add(uuid.toString(), this);
     }
 
     private Player getPlayer() {
@@ -53,23 +57,30 @@ public class UserImpl implements User {
     }
 
     @Override
-    public double getMoney() {
-        return 0;
+    public double getBalance() {
+        return factionals.getEconomy().getBalance(getPlayer());
     }
 
     @Override
-    public void setMoney(double x) {
+    public void setBalance(double x) {
+        double take = -(x-factionals.getEconomy().getBalance(getPlayer()));
 
+        if(take > 0) {
+            factionals.getEconomy().withdrawPlayer(getPlayer(), take);
+        }
+        if(take < 0) {
+            factionals.getEconomy().depositPlayer(getPlayer(), take);
+        }
     }
 
     @Override
-    public void addMoney(double x) {
-
+    public void addToBalance(double x) {
+        factionals.getEconomy().depositPlayer(getPlayer(), x);
     }
 
     @Override
-    public void takeMoney(double x) {
-
+    public void takeFromBalance(double x) {
+        factionals.getEconomy().withdrawPlayer(getPlayer(), x);
     }
 
     @Override
@@ -156,4 +167,9 @@ public class UserImpl implements User {
     public int claimMode() {
         return claimMode;
     }*/
+
+    @Override
+    public boolean userHasPlotPermissions(User user, boolean owner, boolean pub) {
+        return user.equals(this);
+    }
 }

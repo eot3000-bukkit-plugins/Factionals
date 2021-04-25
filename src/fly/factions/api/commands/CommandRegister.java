@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class CommandRegister implements TabExecutor {
@@ -106,6 +107,57 @@ public abstract class CommandRegister implements TabExecutor {
         }
     }
 
+    public static void requireMoreThan(int number, int check, String message, CommandSender sender) {
+        if(number <= check) {
+            sender.sendMessage(message);
+            throw new CommandRegister.ReturnNowException();
+        }
+    }
+
+    public static class NumberPotential {
+        private int check;
+
+        private Consumer<Integer> less;
+        private Consumer<Integer> equal;
+        private Consumer<Integer> more;
+
+        public NumberPotential(int x) {
+            this.check = x;
+
+            less = (a) -> {};
+            equal = (a) -> {};
+            more = (a) -> {};
+        }
+
+        public NumberPotential less(Consumer<Integer> less) {
+            this.less = less;
+
+            return this;
+        }
+
+        public NumberPotential equal(Consumer<Integer> equal) {
+            this.more = equal;
+
+            return this;
+        }
+
+        public NumberPotential more(Consumer<Integer> more) {
+            this.more = more;
+
+            return this;
+        }
+
+        public void run(int x) {
+            if(x < check) {
+                less.accept(x);
+            } else if(x == check) {
+                equal.accept(x);
+            } else {
+                more.accept(x);
+            }
+        }
+    }
+
     public static class SubCommand {
         private List<Parameter> parameters;
         private Method method;
@@ -155,6 +207,8 @@ public abstract class CommandRegister implements TabExecutor {
         public static final Parameter ONLINE_PLAYER = new Parameter<>(Player.class, Bukkit::getPlayer, "online player name");
         public static final Parameter STRING = new Parameter<>(String.class, String::toString, "");
         public static final Parameter INTEGER = new Parameter<>(Integer.class, Integer::parseInt, "number");
+        public static final Parameter DOUBLE = new Parameter<>(Double.class, Double::parseDouble, "number");
+        public static final Parameter BOOLEAN = new Parameter<>(Boolean.class, Boolean::parseBoolean, "boolean");
 
         private Class<T> type;
         private Function<String, T> function;

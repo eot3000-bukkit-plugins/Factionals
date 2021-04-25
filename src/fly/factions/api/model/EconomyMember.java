@@ -11,7 +11,7 @@ public interface EconomyMember extends Savable {
      * @return the balance of the object
      */
 
-    double getMoney();
+    double getBalance();
 
     /**
      * Sets the balance of this object
@@ -19,7 +19,7 @@ public interface EconomyMember extends Savable {
      * @param x the value to set the balance to
      */
 
-    void setMoney(double x);
+    void setBalance(double x);
 
     /**
      * Adds an amount of money to this object's balance
@@ -27,7 +27,7 @@ public interface EconomyMember extends Savable {
      * @param x the amount to add
      */
 
-    void addMoney(double x);
+    void addToBalance(double x);
 
     /**
      * Takes an amount of money from the object's balance
@@ -35,5 +35,5 @@ public interface EconomyMember extends Savable {
      * @param x the amount to take
      */
 
-    void takeMoney(double x);
+    void takeFromBalance(double x);
 }

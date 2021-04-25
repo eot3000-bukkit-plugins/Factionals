@@ -2,6 +2,7 @@ name: Factionals
 main: fly.factions.Factionals
 version: 1.0.0
 api-version: 1.13
+depend: [dynmap]
 commands:
   f:
     description:
@@ -10,4 +11,6 @@ commands:
   factions:
     description:
   factionals:
+    description:
+  plot:
     description:

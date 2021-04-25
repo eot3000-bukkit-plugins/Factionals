@@ -5,6 +5,8 @@ import fly.factions.api.model.Plot;
 import fly.factions.api.model.Region;
 import fly.factions.api.model.User;
 import fly.factions.api.permissions.FactionPermission;
+import fly.factions.api.permissions.Permissibles;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,10 +22,18 @@ public class RegionImpl implements Region {
     private User governor;
     private Set<User> members = new HashSet<>();
 
+    private Color fillColor = Color.fromRGB(255,255,255);
+    private double fillOpacity = 0.3;
+
+    private Color borderColor = Color.fromRGB(255,255,255);
+
     public RegionImpl(String name, User governor, Faction faction) {
         this.name = name;
         this.governor = governor;
         this.faction = faction;
+
+        Permissibles.add(faction.getName() + ":" + name, this);
+        Permissibles.add(getId(), this);
     }
 
     @Override
@@ -33,12 +43,54 @@ public class RegionImpl implements Region {
 
     @Override
     public void addPlot(Plot plot) {
-
+        plots.add(plot);
     }
 
     @Override
     public void removePlot(Plot plot) {
+        plots.remove(plot);
+    }
 
+    @Override
+    public String getDesc() {
+        return "<div class=\"regioninfo\"><div class=\"infowindow\"><span style=\"font-size:120%;\">" + name + "</span><br />" +
+                "<span style=\"font-weight:bold;\">Faction: " + faction.getName() + "</span><br />" +
+                "<span style=\"font-weight:bold;\">Leader: " + getLeader().getName() + "</span></div></div>";
+    }
+
+    @Override
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    @Override
+    public void setFillColor(Color color) {
+        this.fillColor = color;
+    }
+
+    @Override
+    public double getFillOpacity() {
+        return fillOpacity;
+    }
+
+    @Override
+    public void setFillOpacity(double d) {
+        this.fillOpacity = d;
+    }
+
+    @Override
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    @Override
+    public void setBorderColor(Color color) {
+        this.borderColor = color;
+    }
+
+    @Override
+    public double getBorderOpacity() {
+        return 1;
     }
 
     @Override
@@ -49,11 +101,6 @@ public class RegionImpl implements Region {
     @Override
     public void setLeader(User user) {
         this.governor = user;
-    }
-
-    @Override
-    public boolean hasPermission(User user, FactionPermission permission) {
-        return false;
     }
 
     @Override
@@ -71,28 +118,28 @@ public class RegionImpl implements Region {
     }
 
     @Override
-    public double getMoney() {
+    public double getBalance() {
         return 0;
     }
 
     @Override
-    public void setMoney(double x) {
+    public void setBalance(double x) {
 
     }
 
     @Override
-    public void addMoney(double x) {
+    public void addToBalance(double x) {
 
     }
 
     @Override
-    public void takeMoney(double x) {
+    public void takeFromBalance(double x) {
 
     }
 
     @Override
     public String getId() {
-        return name + "_region_of_" + faction.getId();
+        return faction.getId() + "-region-" + name;
     }
 
     @Override
@@ -116,5 +163,10 @@ public class RegionImpl implements Region {
     @Override
     public Collection<User> getMembers() {
         return new ArrayList<>(members);
+    }
+
+    @Override
+    public boolean userHasPlotPermissions(User user, boolean owner, boolean pub) {
+        return owner ? governor.equals(user) : members.contains(user);
     }
 }

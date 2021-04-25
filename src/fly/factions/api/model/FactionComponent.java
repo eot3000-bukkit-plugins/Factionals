@@ -4,11 +4,9 @@ import fly.factions.api.permissions.FactionPermission;
 
 import java.util.Collection;
 
-public interface FactionComponent extends EconomyMember, Permissible, PlayerGroup {
+public interface FactionComponent extends PlotOwner, PlayerGroup {
     User getLeader();
     void setLeader(User user);
-
-    boolean hasPermission(User user, FactionPermission permission);
 
     /**
      * Adds a user to the component's member list

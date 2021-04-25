@@ -5,9 +5,14 @@ import fly.factions.api.commands.CommandRegister;
 import fly.factions.api.exceptions.NotAMemberException;
 import fly.factions.api.model.*;
 import fly.factions.api.permissions.FactionPermission;
+import fly.factions.api.permissions.Permissibles;
 import fly.factions.api.registries.Registry;
+import fly.factions.api.serialization.Serializer;
 import fly.factions.impl.util.Plots;
+import javafx.util.Pair;
+import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Banner;
@@ -23,7 +28,14 @@ public class FactionImpl implements fly.factions.api.model.Faction {
     private String name;
     private ItemStack banner;
 
+    private double balance;
+
     private boolean isDeleted;
+
+    private Color fillColor = Color.fromRGB(255,255,255);
+    private double fillOpacity = 0.3;
+
+    private Color borderColor = Color.fromRGB(255,255,255);
 
     private List<ExecutiveDivision> departments = new ArrayList<>();
     private List<Region> regions = new ArrayList<>();
@@ -34,6 +46,9 @@ public class FactionImpl implements fly.factions.api.model.Faction {
         this.name = string;
 
         members.add(leader);
+
+        Permissibles.add(name, this);
+        Permissibles.add(getId(), this);
     }
 
     @Override
@@ -52,28 +67,63 @@ public class FactionImpl implements fly.factions.api.model.Faction {
     }
 
     @Override
-    public double getMoney() {
-        return 0;
+    public Color getFillColor() {
+        return fillColor;
     }
 
     @Override
-    public void setMoney(double x) {
-
+    public void setFillColor(Color color) {
+        this.fillColor = color;
     }
 
     @Override
-    public void addMoney(double x) {
-
+    public double getFillOpacity() {
+        return fillOpacity;
     }
 
     @Override
-    public void takeMoney(double x) {
+    public void setFillOpacity(double d) {
+        this.fillOpacity = d;
+    }
 
+    @Override
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    @Override
+    public void setBorderColor(Color color) {
+        this.borderColor = color;
+    }
+
+    @Override
+    public double getBorderOpacity() {
+        return 0.9;
+    }
+
+    @Override
+    public double getBalance() {
+        return balance;
+    }
+
+    @Override
+    public void setBalance(double x) {
+        this.balance = x;
+    }
+
+    @Override
+    public void addToBalance(double x) {
+        balance+=x;
+    }
+
+    @Override
+    public void takeFromBalance(double x) {
+        balance-=x;
     }
 
     @Override
     public String getId() {
-        return null;
+        return "faction-" + getName();
     }
 
     @Override
@@ -114,7 +164,13 @@ public class FactionImpl implements fly.factions.api.model.Faction {
 
     @Override
     public boolean hasPermission(User user, FactionPermission permission) {
-        return true;
+        for(ExecutiveDivision division : departments) {
+            if(division.getMembers().contains(user) && (division.canDo(permission) || division.canDo(FactionPermission.OWNER))) {
+                return true;
+            }
+        }
+
+        return leader.equals(user);
     }
 
     @Override
@@ -202,7 +258,23 @@ public class FactionImpl implements fly.factions.api.model.Faction {
         this.isDeleted = true;
 
         factionals.getRegistry(Faction.class, String.class).set(name, null);
+        Serializer.saveAll(Collections.singletonList(this), Faction.class);
+
+        Permissibles.remove(this);
     }
+
+    @Override
+    public boolean userHasPlotPermissions(User user, boolean owner, boolean pub) {
+        return owner ? user.equals(leader) : members.contains(user);
+    }
+
+    @Override
+    public String getDesc() {
+        return "<div class=\"regioninfo\"><div class=\"infowindow\"><span style=\"font-size:120%;\">" + name + "</span><br />" +
+                "<span style=\"font-weight:bold;\">Leader:" + getLeader().getName() + "</span></div></div>";
+    }
+
+    //TODO: Move commands into seperate class
 
     private static void requireFactionNotExist(CommandSender sender, String name) {
         Faction faction = factionals.getRegistry(Faction.class, String.class).get(name);
@@ -254,32 +326,6 @@ public class FactionImpl implements fly.factions.api.model.Faction {
         return true;
     }
 
-    public static boolean createRegion(CommandSender sender, String a, String s) {
-        CommandRegister.requirePlayer(sender);
-
-        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
-
-        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
-        requirePermission(user, FactionPermission.INTERNAL_MANAGEMENT, user.getFaction());
-        requireRegionNotExist(sender, s, user.getFaction());
-
-        user.getFaction().addRegion(new RegionImpl(s, user, user.getFaction()));
-        return true;
-    }
-
-    public static boolean createDepartment(CommandSender sender, String a, String s) {
-        CommandRegister.requirePlayer(sender);
-
-        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
-
-        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
-        requirePermission(user, FactionPermission.INTERNAL_MANAGEMENT, user.getFaction());
-        requireDepartmentNotExist(sender, s, user.getFaction());
-
-        user.getFaction().addDepartment(new ExecutiveDivisionImpl(s, user, user.getFaction()));
-        return true;
-    }
-
     public static boolean claim(CommandSender sender, String a) {
         CommandRegister.requirePlayer(sender);
 
@@ -290,11 +336,75 @@ public class FactionImpl implements fly.factions.api.model.Faction {
 
         Location location = ((Player) sender).getLocation();
 
-        Plot plot = new PlotImpl(location.getChunk().getX(), location.getChunk().getZ(), location.getWorld(), user.getFaction());
+        boolean result = claim0(location.getChunk().getX(), location.getChunk().getZ(), location.getWorld(), user.getFaction());
 
-        plot.setFaction(user.getFaction());
+        if(!result) {
+            sender.sendMessage(ChatColor.RED + "There is already a plot here");
+        }
+
+        return result;
+    }
+
+    private static boolean claim0(int x, int z, World world, Faction faction) {
+        Plot old = factionals.getRegistry(Plot.class, Integer.class).get(Plots.getLocationId(x, z, world));
+
+        if(old != null) {
+            return false;
+        }
+
+        Plot plot = new PlotImpl(x, z, world, faction);
+
+        plot.setFaction(faction);
 
         return true;
+    }
+
+    public static boolean claimFill(CommandSender sender, String a, String b) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), "You are not in a faction!", sender);
+        requirePermission(user, FactionPermission.TERRITORY, user.getFaction());
+
+        MutableInt m = new MutableInt(50);
+
+        if(!claim0(((Player) sender).getLocation().getChunk().getX(), ((Player) sender).getLocation().getChunk().getZ(), ((Player) sender).getWorld(), user.getFaction())) {
+            return true;
+        }
+
+        fillNode(((Player) sender).getLocation().getChunk().getX(), ((Player) sender).getLocation().getChunk().getZ(), ((Player) sender).getWorld(), user.getFaction(), m);
+
+        return true;
+    }
+
+    private static void fillNode(int x, int z, World w, Faction faction, MutableInt left) {
+        List<Pair<Integer, Integer>> list = new ArrayList<>();
+
+        if(((int)left.getValue()) <= 0) {
+            return;
+        }
+
+        if(claim0(x+1, z, w, faction)) {
+            list.add(new Pair<>(x+1, z));
+            left.setValue(((int) left.getValue())-1);
+        }
+        if(claim0(x, z+1, w, faction)) {
+            list.add(new Pair<>(x, z+1));
+            left.setValue(((int) left.getValue())-1);
+        }
+        if(claim0(x-1, z, w, faction)) {
+            list.add(new Pair<>(x-1, z));
+            left.setValue(((int) left.getValue())-1);
+        }
+        if(claim0(x, z-1, w, faction)) {
+            list.add(new Pair<>(x, z-1));
+            left.setValue(((int) left.getValue())-1);
+        }
+
+        for(Pair<Integer, Integer> pair : list) {
+            fillNode(pair.getKey(), pair.getValue(), w, faction, left);
+        }
     }
 
     public static boolean map(CommandSender sender, String a) {
@@ -305,8 +415,8 @@ public class FactionImpl implements fly.factions.api.model.Faction {
         List<Character> characters = new ArrayList<>(Arrays.asList('#', '&', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'));
         Map<Faction, Character> factionCharacters = new HashMap<>();
 
-        int height = 10;
-        int width = 5;
+        int height = 11;
+        int width = 25;
 
         int xb = ((Player) sender).getLocation().getChunk().getX();
         int zb = ((Player) sender).getLocation().getChunk().getZ();
@@ -321,10 +431,10 @@ public class FactionImpl implements fly.factions.api.model.Faction {
 
         for(int z = 0; z < height; z++) {
             String line = "";
-
             for(int x = 0; x < width; x++) {
                 int plotId = Plots.getLocationId((xb+x)-xm, (zb+z)-zm, w);
-                Faction faction = Factionals.getFactionals().getRegistry(Plot.class, Integer.class).get(plotId).getFaction();
+                Plot plot = Factionals.getFactionals().getRegistry(Plot.class, Integer.class).get(plotId);
+                Faction faction = plot != null ? plot.getFaction() : null;
                 String chunkAddition;
 
                 if(faction == null || faction.isDeleted()) {
@@ -410,6 +520,81 @@ public class FactionImpl implements fly.factions.api.model.Faction {
         return false;
     }
 
+    public static boolean createRegion(CommandSender sender, String a, String b, String s) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+        requirePermission(user, FactionPermission.INTERNAL_MANAGEMENT, user.getFaction());
+        requireRegionNotExist(sender, s, user.getFaction());
+
+        user.getFaction().addRegion(new RegionImpl(s, user, user.getFaction()));
+        return true;
+    }
+
+    public static boolean addToRegion(CommandSender sender, String a, String b, String region, User victim) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+
+        Region factionRegion = user.getFaction().getRegion(region);
+
+        if(!factionRegion.getLeader().equals(user)) {
+            requirePermission(user, FactionPermission.OWNER, user.getFaction());
+        }
+
+        requireNotNull(factionRegion, ChatColor.RED + "No such region!", sender);
+
+        if(victim.getFaction().equals(user.getFaction())) {
+            factionRegion.addMember(victim);
+            return true;
+        }
+
+        sender.sendMessage(ChatColor.RED + "Victim is not in the faction!");
+        return false;
+    }
+
+    public static boolean setRegionLeader(CommandSender sender, String a, String b, String c, String region, User victim) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+
+        Region factionRegion = user.getFaction().getRegion(region);
+
+        if(!factionRegion.getLeader().equals(user)) {
+            requirePermission(user, FactionPermission.OWNER, user.getFaction());
+        }
+
+        requireNotNull(factionRegion, ChatColor.RED + "No such region!", sender);
+
+        if(victim.getFaction().equals(user.getFaction())) {
+            factionRegion.setLeader(victim);
+            factionRegion.addMember(victim);
+            return true;
+        }
+
+        sender.sendMessage(ChatColor.RED + "Victim is not in the faction!");
+        return false;
+    }
+
+    public static boolean createDepartment(CommandSender sender, String a, String b, String s) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+        requirePermission(user, FactionPermission.INTERNAL_MANAGEMENT, user.getFaction());
+        requireDepartmentNotExist(sender, s, user.getFaction());
+
+        user.getFaction().addDepartment(new ExecutiveDivisionImpl(s, user, user.getFaction()));
+        return true;
+    }
+
     public static boolean addToDepartment(CommandSender sender, String a, String b, String department, User victim) {
         CommandRegister.requirePlayer(sender);
 
@@ -434,7 +619,7 @@ public class FactionImpl implements fly.factions.api.model.Faction {
         return false;
     }
 
-    public static boolean setDepartmentLeader(CommandSender sender, String a, String b, String department, User victim) {
+    public static boolean setDepartmentLeader(CommandSender sender, String a, String b, String c, String department, User victim) {
         CommandRegister.requirePlayer(sender);
 
         User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
@@ -457,5 +642,107 @@ public class FactionImpl implements fly.factions.api.model.Faction {
 
         sender.sendMessage(ChatColor.RED + "Victim is not in the faction!");
         return false;
+    }
+
+    public static boolean setFactionFillColor(CommandSender sender, String a, String b, Integer red, Integer blue, Integer green) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+        requirePermission(user, FactionPermission.OWNER, user.getFaction());
+
+        user.getFaction().setFillColor(Color.fromRGB(red, green, blue));
+
+        return true;
+    }
+
+    public static boolean setFactionFillOpacity(CommandSender sender, String a, String b, Double opacity) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+        requirePermission(user, FactionPermission.OWNER, user.getFaction());
+
+        user.getFaction().setFillOpacity(opacity);
+
+        return true;
+    }
+
+    public static boolean setFactionBorderColor(CommandSender sender, String a, String b, Integer red, Integer blue, Integer green) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+        requirePermission(user, FactionPermission.OWNER, user.getFaction());
+
+        user.getFaction().setBorderColor(Color.fromRGB(red, green, blue));
+
+        return true;
+    }
+
+    public static boolean setRegionFillColor(CommandSender sender, String a, String b, String c, String region, Integer red, Integer blue, Integer green) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+
+        Region factionRegion = user.getFaction().getRegion(region);
+
+        requireNotNull(factionRegion, ChatColor.RED + "No such region!", sender);
+
+        if(!factionRegion.getLeader().equals(user)) {
+            sender.sendMessage(ChatColor.RED + "No permission");
+            return false;
+        }
+
+        factionRegion.setFillColor(Color.fromRGB(red, green, blue));
+
+        return true;
+    }
+
+    public static boolean setRegionFillOpacity(CommandSender sender, String a, String b, String c, String region, Double opacity) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+
+        Region factionRegion = user.getFaction().getRegion(region);
+
+        requireNotNull(factionRegion, ChatColor.RED + "No such region!", sender);
+
+        if(!factionRegion.getLeader().equals(user)) {
+            sender.sendMessage(ChatColor.RED + "No permission");
+            return false;
+        }
+
+        factionRegion.setFillOpacity(opacity);
+
+        return true;
+    }
+
+    public static boolean setRegionBorderColor(CommandSender sender, String a, String b, String c, String region, Integer red, Integer blue, Integer green) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+
+        Region factionRegion = user.getFaction().getRegion(region);
+
+        requireNotNull(factionRegion, ChatColor.RED + "No such region!", sender);
+
+        if(!factionRegion.getLeader().equals(user)) {
+            sender.sendMessage(ChatColor.RED + "No permission");
+            return false;
+        }
+
+        factionRegion.setBorderColor(Color.fromRGB(red, green, blue));
+
+        return true;
     }
 }

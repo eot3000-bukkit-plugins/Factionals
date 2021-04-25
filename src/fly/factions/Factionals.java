@@ -6,8 +6,11 @@ import fly.factions.api.model.User;
 import fly.factions.api.registries.Registry;
 import fly.factions.impl.commands.FactionCommand;
 //import fly.factions.impl.listeners.ChatListener;
+import fly.factions.impl.commands.PlotCommand;
+import fly.factions.impl.dynmap.DynmapManager;
 import fly.factions.impl.listeners.JoinLeaveListener;
 //import fly.factions.impl.listeners.MenusListener;
+import fly.factions.impl.listeners.PlotListener;
 import fly.factions.impl.registries.RegistryImpl;
 import fly.factions.impl.serialization.FactionSerializer;
 import fly.factions.api.serialization.Serializer;
@@ -34,6 +37,7 @@ public class Factionals extends JavaPlugin implements Listener {
     private Map<Class<?>, Registry> registries = new HashMap<>();
 
     private FactionCommand factionCommand;
+    private PlotCommand plotCommand;
 
     private Economy economy;
 
@@ -69,14 +73,19 @@ public class Factionals extends JavaPlugin implements Listener {
 
 
         new JoinLeaveListener();
+        new PlotListener();
         //new ChatListener();
         //new MenusListener();
+
+
+        new DynmapManager();
 
 
         economy = Bukkit.getServicesManager().getRegistration(Economy.class).getProvider();
 
 
         factionCommand = new FactionCommand(this);
+        plotCommand = new PlotCommand(this);
 
 
         Collection<User> userList = Serializer.loadAll(User.class);
@@ -161,9 +170,7 @@ public class Factionals extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPluginEnable(PluginEnableEvent event) {
-        if(event.getPlugin() instanceof DynmapAPI) {
-            //new DynmapFactionPlugin().activate((DynmapAPI) event.getPlugin());
-        }
+
     }
 
     /*@EventHandler
@@ -206,4 +213,8 @@ public class Factionals extends JavaPlugin implements Listener {
             event.getPlayer().sendTitle(new Title(ChatColor.GREEN + "Entering " + ChatColor.YELLOW + factionTo.name() + ChatColor.GREEN + "!", "", 5, 10, 5));
         }
     }*/
+
+    public Economy getEconomy() {
+        return economy;
+    }
 }

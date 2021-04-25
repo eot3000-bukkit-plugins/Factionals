@@ -3,7 +3,7 @@ package fly.factions.api.model;
 import java.util.Collection;
 import java.util.UUID;
 
-public interface User extends EconomyMember, Permissible {
+public interface User extends PlotOwner {
     UUID getUniqueId();
 
     void sendMessage(String s);
