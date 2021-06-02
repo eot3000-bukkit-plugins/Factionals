@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * The {@code Faction} class represents factions
  */
-public interface Faction extends LandAdministrator {
+public interface Faction extends LandAdministrator<Plot> {
 
     /**
      * @return {@code true} if the faction was deleted, or {@code false} if not
@@ -117,4 +117,14 @@ public interface Faction extends LandAdministrator {
      */
 
     boolean hasPermission(User user, FactionPermission permission);
+
+    /**
+     * Returns the time at which the faction was created.
+     *
+     * @return a {@code long}, a number which is the result of System's currentTimeMillis function
+     *
+     * @see System#currentTimeMillis()
+     */
+
+    long getCreationTime();
 }

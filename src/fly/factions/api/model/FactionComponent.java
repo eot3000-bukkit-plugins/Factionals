@@ -1,9 +1,5 @@
 package fly.factions.api.model;
 
-import fly.factions.api.permissions.FactionPermission;
-
-import java.util.Collection;
-
 public interface FactionComponent extends PlotOwner, PlayerGroup {
     User getLeader();
     void setLeader(User user);

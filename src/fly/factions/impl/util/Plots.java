@@ -50,7 +50,7 @@ public class Plots {
     }
 
     public static Integer getLocationId(int x, int z, World world) {
-        return ((x+2048) | ((z+2048) << 12)) | (getWorldId(world) << 24);
+        return getLocationId(x, z, getWorldId(world));
     }
 
     public static Integer getLocationId(int x, int z, int world) {
@@ -240,15 +240,20 @@ public class Plots {
     }
 
     public static int getWorldId(World world) {
+        if(world == null) {
+            System.out.println("uh oh");
+            return 100;
+        }
+
         switch (world.getName()) {
             case "world":
                 return 0;
 
             case "world_nether":
-                return -1;
+                return 1;
 
             case "world_the_end":
-                return 1;
+                return 2;
 
             default:
                 System.out.println(world.getName());
@@ -257,15 +262,27 @@ public class Plots {
     }
 
     public static World getWorld(int worldId) {
+        World x = getWorld0(worldId);
+
+        for(World world : Bukkit.getWorlds()) {
+            System.out.println(world.getName());
+        }
+
+        System.out.println(worldId + " " + x.getName());
+
+        return x;
+    }
+
+    public static World getWorld0(int worldId) {
         switch (worldId) {
             case 0:
                 return Bukkit.getWorld("world");
 
-            case -1:
+            case 1:
                 return Bukkit.getWorld("world_nether");
 
-            case 1:
-                return Bukkit.getWorld("world_the_nether");
+            case 2:
+                return Bukkit.getWorld("world_the_end");
 
             default:
                 System.out.println(worldId);

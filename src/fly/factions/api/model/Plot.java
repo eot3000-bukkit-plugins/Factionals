@@ -5,7 +5,7 @@ import fly.factions.api.permissions.PlotPermission;
 import java.util.EnumMap;
 import java.util.Set;
 
-public interface Plot extends Savable {
+public interface Plot extends Savable, LandDivision {
     void setFaction(Faction faction);
 
     int getLocationId();

@@ -2,7 +2,6 @@ package fly.factions.impl.commands;
 
 import fly.factions.Factionals;
 import fly.factions.api.commands.CommandRegister;
-import fly.factions.impl.model.FactionImpl;
 import fly.factions.impl.util.Plots;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

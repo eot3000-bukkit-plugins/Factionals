@@ -6,95 +6,41 @@ import fly.factions.api.exceptions.NotAMemberException;
 import fly.factions.api.model.*;
 import fly.factions.api.permissions.FactionPermission;
 import fly.factions.api.permissions.Permissibles;
-import fly.factions.api.registries.Registry;
 import fly.factions.api.serialization.Serializer;
 import fly.factions.impl.util.Plots;
 import javafx.util.Pair;
 import org.apache.commons.lang.mutable.MutableInt;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Banner;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class FactionImpl implements fly.factions.api.model.Faction {
-    private User leader;
-    private Set<User> members = new HashSet<>();
-    private String name;
-    private ItemStack banner;
+public class FactionImpl extends AbstractLandAdministrator<Plot> implements Faction {
+    private ItemStack banner = new ItemStack(Material.AIR);
 
-    private double balance;
+    private long creationTime;
 
     private boolean isDeleted;
 
-    private Color fillColor = Color.fromRGB(255,255,255);
-    private double fillOpacity = 0.3;
-
-    private Color borderColor = Color.fromRGB(255,255,255);
-
     private List<ExecutiveDivision> departments = new ArrayList<>();
     private List<Region> regions = new ArrayList<>();
-    private List<Plot> plots = new ArrayList<>();
 
-    public FactionImpl(User leader, String string) {
-        this.leader = leader;
-        this.name = string;
-
-        members.add(leader);
+    public FactionImpl(String name, User leader, long time) {
+        super(name, leader);
 
         Permissibles.add(name, this);
         Permissibles.add(getId(), this);
+
+        this.creationTime = time;
     }
 
-    @Override
-    public Collection<Plot> getPlots() {
-        return new ArrayList<>(plots);
+    public FactionImpl(User leader, String name) {
+        this(name, leader, System.currentTimeMillis());
     }
 
-    @Override
-    public void addPlot(Plot plot) {
-        plots.add(plot);
-    }
-
-    @Override
-    public void removePlot(Plot plot) {
-        plots.remove(plot);
-    }
-
-    @Override
-    public Color getFillColor() {
-        return fillColor;
-    }
-
-    @Override
-    public void setFillColor(Color color) {
-        this.fillColor = color;
-    }
-
-    @Override
-    public double getFillOpacity() {
-        return fillOpacity;
-    }
-
-    @Override
-    public void setFillOpacity(double d) {
-        this.fillOpacity = d;
-    }
-
-    @Override
-    public Color getBorderColor() {
-        return borderColor;
-    }
-
-    @Override
-    public void setBorderColor(Color color) {
-        this.borderColor = color;
-    }
+    //DYNMAP
 
     @Override
     public double getBorderOpacity() {
@@ -102,24 +48,12 @@ public class FactionImpl implements fly.factions.api.model.Faction {
     }
 
     @Override
-    public double getBalance() {
-        return balance;
+    public String getDesc() {
+        return "<div class=\"regioninfo\"><div class=\"infowindow\"><span style=\"font-size:120%;\">" + name + "</span><br />" +
+                "<span style=\"font-weight:bold;\">Leader:" + getLeader().getName() + "</span></div></div>";
     }
 
-    @Override
-    public void setBalance(double x) {
-        this.balance = x;
-    }
-
-    @Override
-    public void addToBalance(double x) {
-        balance+=x;
-    }
-
-    @Override
-    public void takeFromBalance(double x) {
-        balance-=x;
-    }
+    //META
 
     @Override
     public String getId() {
@@ -132,21 +66,26 @@ public class FactionImpl implements fly.factions.api.model.Faction {
     }
 
     @Override
-    public void broadcast(String s) {
-        for(User user : members) {
-            user.sendMessage(s);
-        }
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
     @Override
-    public Collection<User> getMembers() {
-        return new ArrayList<>(members);
+    public void delete() {
+        this.isDeleted = true;
+
+        factionals.getRegistry(Faction.class, String.class).set(name, null);
+        Serializer.saveAll(Collections.singletonList(this), Faction.class);
+
+        Permissibles.remove(this);
     }
 
     @Override
-    public User getLeader() {
-        return leader;
+    public long getCreationTime() {
+        return creationTime;
     }
+
+    //MEMBER MANAGEMENT
 
     @Override
     public void setLeader(User leader) {
@@ -155,32 +94,6 @@ public class FactionImpl implements fly.factions.api.model.Faction {
         }
 
         this.leader = leader;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean hasPermission(User user, FactionPermission permission) {
-        for(ExecutiveDivision division : departments) {
-            if(division.getMembers().contains(user) && (division.canDo(permission) || division.canDo(FactionPermission.OWNER))) {
-                return true;
-            }
-        }
-
-        return leader.equals(user);
-    }
-
-    @Override
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    @Override
-    public void addMember(User user) {
-        members.add(user);
     }
 
     @Override
@@ -200,6 +113,26 @@ public class FactionImpl implements fly.factions.api.model.Faction {
             division.removeMember(user);
         }
     }
+
+    //PERMISSIONS
+
+    @Override
+    public boolean hasPermission(User user, FactionPermission permission) {
+        for(ExecutiveDivision division : departments) {
+            if(division.getMembers().contains(user) && (division.canDo(permission) || division.canDo(FactionPermission.OWNER))) {
+                return true;
+            }
+        }
+
+        return leader.equals(user);
+    }
+
+    @Override
+    public boolean userHasPlotPermissions(User user, boolean owner, boolean pub) {
+        return owner ? user.equals(leader) : members.contains(user);
+    }
+
+    //REGIONS
 
     @Override
     public Collection<Region> getRegions() {
@@ -227,6 +160,8 @@ public class FactionImpl implements fly.factions.api.model.Faction {
         regions.remove(region);
     }
 
+    //DEPARTMENTS
+
     @Override
     public Collection<ExecutiveDivision> getDepartments() {
         return new ArrayList<>(departments);
@@ -251,27 +186,6 @@ public class FactionImpl implements fly.factions.api.model.Faction {
     @Override
     public void removeDepartment(ExecutiveDivision division) {
         departments.remove(division);
-    }
-
-    @Override
-    public void delete() {
-        this.isDeleted = true;
-
-        factionals.getRegistry(Faction.class, String.class).set(name, null);
-        Serializer.saveAll(Collections.singletonList(this), Faction.class);
-
-        Permissibles.remove(this);
-    }
-
-    @Override
-    public boolean userHasPlotPermissions(User user, boolean owner, boolean pub) {
-        return owner ? user.equals(leader) : members.contains(user);
-    }
-
-    @Override
-    public String getDesc() {
-        return "<div class=\"regioninfo\"><div class=\"infowindow\"><span style=\"font-size:120%;\">" + name + "</span><br />" +
-                "<span style=\"font-weight:bold;\">Leader:" + getLeader().getName() + "</span></div></div>";
     }
 
     //TODO: Move commands into seperate class

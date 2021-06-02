@@ -1,59 +1,49 @@
 package fly.factions.impl.model;
 
+import fly.factions.api.exceptions.NotAMemberException;
+import fly.factions.api.model.ExecutiveDivision;
 import fly.factions.api.model.Organization;
+import fly.factions.api.model.Region;
 import fly.factions.api.model.User;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collection;
-
-public class OrganizationImpl implements Organization {
-    @Override
-    public double getBalance() {
-        return 0;
+public class OrganizationImpl extends AbstractFactionComponent implements Organization {
+    public OrganizationImpl(String name, User leader) {
+        super(name, leader);
     }
 
     @Override
-    public void setBalance(double x) {
+    public void setLeader(User leader) {
+        if(!members.contains(leader)) {
+            throw new NotAMemberException();
+        }
 
+        this.leader = leader;
     }
 
     @Override
-    public void addToBalance(double x) {
+    public void removeMember(User user) {
+        if(user.equals(leader)) {
 
-    }
+            return;
+        }
 
-    @Override
-    public void takeFromBalance(double x) {
-
+        members.remove(user);
     }
 
     @Override
     public String getId() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return null;
+        return "organization-" + name;
     }
 
     @Override
     public boolean userHasPlotPermissions(User user, boolean owner, boolean pub) {
-        return false;
+        return members.contains(user);
     }
 
     @Override
     public ItemStack getItem() {
-        return null;
-    }
-
-    @Override
-    public void broadcast(String s) {
-
-    }
-
-    @Override
-    public Collection<User> getMembers() {
-        return null;
+        return new ItemStack(Material.AIR);
     }
 }

@@ -100,6 +100,8 @@ public class Factionals extends JavaPlugin implements Listener {
             registries.get(Faction.class).set(faction.getName(), faction);
         }
 
+
+
         /*int count = 0;
 
         for(int v = 0; v < 5; v++) {

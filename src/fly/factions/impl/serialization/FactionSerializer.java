@@ -25,8 +25,15 @@ import java.util.*;
 public class FactionSerializer extends Serializer<Faction> {
     private File dir = new File("plugins\\Factionals\\factions");
 
+    private boolean plots = false;
+
     public FactionSerializer(Factionals factionals) {
         super(Faction.class, factionals);
+    }
+
+    @Override
+    public void onLoad() {
+        this.plots = true;
     }
 
     @Override
@@ -41,74 +48,80 @@ public class FactionSerializer extends Serializer<Faction> {
         YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 
         if(!configuration.getBoolean("deleted")) {
-            Faction faction = new FactionImpl(r.get(UUID.fromString(configuration.getString("leader"))), configuration.getString("name"));
+            Faction faction;
 
-            faction.setBorderColor(Color.fromRGB(configuration.getInt("br"), configuration.getInt("bg"), configuration.getInt("bb")));
-            faction.setFillColor(Color.fromRGB(configuration.getInt("fr"), configuration.getInt("fg"), configuration.getInt("fb")));
+            if(!plots) {
+                faction = new FactionImpl(configuration.getString("name"), r.get(UUID.fromString(configuration.getString("leader"))), configuration.getLong("creationTime"));
 
-            faction.setFillOpacity(configuration.getDouble("fo"));
+                faction.setBorderColor(Color.fromRGB(configuration.getInt("br"), configuration.getInt("bg"), configuration.getInt("bb")));
+                faction.setFillColor(Color.fromRGB(configuration.getInt("fr"), configuration.getInt("fg"), configuration.getInt("fb")));
 
-            //Departments
+                faction.setFillOpacity(configuration.getDouble("fo"));
 
-            ConfigurationSection departments = configuration.getConfigurationSection("departments");
+                //Departments
 
-            for (String string : departments.getKeys(false)) {
-                ConfigurationSection department = departments.getConfigurationSection(string);
-                ExecutiveDivision division = new ExecutiveDivisionImpl(department.getString("name"), r.get(UUID.fromString(department.getString("leader"))), faction);
+                ConfigurationSection departments = configuration.getConfigurationSection("departments");
 
-                for (String member : department.getStringList("members")) {
-                    division.addMember(r.get(UUID.fromString(member)));
+                for (String string : departments.getKeys(false)) {
+                    ConfigurationSection department = departments.getConfigurationSection(string);
+                    ExecutiveDivision division = new ExecutiveDivisionImpl(department.getString("name"), r.get(UUID.fromString(department.getString("leader"))), faction);
+
+                    for (String member : department.getStringList("members")) {
+                        division.addMember(r.get(UUID.fromString(member)));
+                    }
+
+                    faction.addDepartment(division);
                 }
 
-                faction.addDepartment(division);
-            }
+                //Regions
 
-            //Regions
+                ConfigurationSection regions = configuration.getConfigurationSection("regions");
 
-            ConfigurationSection regions = configuration.getConfigurationSection("regions");
+                for (String string : regions.getKeys(false)) {
+                    ConfigurationSection region = regions.getConfigurationSection(string);
+                    Region factionRegion = new RegionImpl(region.getString("name"), r.get(UUID.fromString(region.getString("leader"))), faction);
 
-            for (String string : regions.getKeys(false)) {
-                ConfigurationSection region = regions.getConfigurationSection(string);
-                Region factionRegion = new RegionImpl(region.getString("name"), r.get(UUID.fromString(region.getString("leader"))), faction);
+                    for (String member : region.getStringList("members")) {
+                        factionRegion.addMember(r.get(UUID.fromString(member)));
+                    }
 
-                for (String member : region.getStringList("members")) {
-                    factionRegion.addMember(r.get(UUID.fromString(member)));
+                    factionRegion.setBorderColor(Color.fromRGB(region.getInt("br"), region.getInt("bg"), region.getInt("bb")));
+                    factionRegion.setFillColor(Color.fromRGB(region.getInt("fr"), region.getInt("fg"), region.getInt("fb")));
+
+                    factionRegion.setFillOpacity(region.getDouble("fo"));
+
+                    faction.addRegion(factionRegion);
                 }
 
-                factionRegion.setBorderColor(Color.fromRGB(region.getInt("br"), region.getInt("bg"), region.getInt("bb")));
-                factionRegion.setFillColor(Color.fromRGB(region.getInt("fr"), region.getInt("fg"), region.getInt("fb")));
+                //Members
 
-                factionRegion.setFillOpacity(region.getDouble("fo"));
+                for (String member : configuration.getStringList("members")) {
+                    r.get(UUID.fromString(member)).setFaction(faction);
+                }
+            } else {
+                faction = factionals.getRegistry(Faction.class, String.class).get(configuration.getString("name"));
 
-                faction.addRegion(factionRegion);
-            }
+                //Plots
 
-            //Members
+                ConfigurationSection plots = configuration.getConfigurationSection("plots");
 
-            for (String member : configuration.getStringList("members")) {
-                r.get(UUID.fromString(member)).setFaction(faction);
-            }
+                for (String string : plots.getKeys(false)) {
+                    ConfigurationSection plot = plots.getConfigurationSection(string);
+                    Plot factionPlot = new PlotImpl(plot.getInt("x"), plot.getInt("z"), Plots.getWorld(plot.getInt("w")), faction);
 
-            //Plots
+                    factionPlot.setPrice(plot.getInt("price"));
+                    factionPlot.setOwner(getPlotOwner(plot.getString("owner")));
+                    factionPlot.setAdministrator((LandAdministrator) getPlotOwner(plot.getString("administrator")));
 
-            ConfigurationSection plots = configuration.getConfigurationSection("plots");
+                    ConfigurationSection plotPermissions = plot.getConfigurationSection("permissions");
 
-            for (String string : plots.getKeys(false)) {
-                ConfigurationSection plot = plots.getConfigurationSection(string);
-                Plot factionPlot = new PlotImpl(plot.getInt("x"), plot.getInt("z"), Plots.getWorld(plot.getInt("w")), faction);
+                    for (String key : plotPermissions.getKeys(false)) {
+                        for (String permissible : plotPermissions.getStringList(key)) {
+                            Permissible plotPermissible = Permissibles.get(permissible).get(0);
+                            PlotPermission permission = PlotPermission.valueOf(key);
 
-                factionPlot.setPrice(plot.getInt("price"));
-                factionPlot.setOwner(getPlotOwner(plot.getString("owner")));
-                factionPlot.setAdministrator((LandAdministrator) getPlotOwner(plot.getString("administrator")));
-
-                ConfigurationSection plotPermissions = plot.getConfigurationSection("permissions");
-
-                for(String key : plotPermissions.getKeys(false)) {
-                    for(String permissible : plotPermissions.getStringList(key)) {
-                        Permissible plotPermissible = Permissibles.get(permissible).get(0);
-                        PlotPermission permission = PlotPermission.valueOf(key);
-
-                        factionPlot.setPermission(plotPermissible, permission, true);
+                            factionPlot.setPermission(plotPermissible, permission, true);
+                        }
                     }
                 }
             }
@@ -133,7 +146,7 @@ public class FactionSerializer extends Serializer<Faction> {
 
     @Override
     public void save(Faction faction) {
-        File file = new File("plugins\\Factionals\\factions\\" + faction.getName());
+        File file = new File("plugins\\Factionals\\factions\\" + faction.getCreationTime() + "-" + faction.getName());
 
         YamlConfiguration configuration = new YamlConfiguration();
 

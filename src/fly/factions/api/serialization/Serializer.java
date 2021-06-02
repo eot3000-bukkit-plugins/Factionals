@@ -37,6 +37,8 @@ public abstract class Serializer<T extends Savable> {
             list.add(x);
         }
 
+        serializer.onLoad();
+
         return list;
     }
 
@@ -44,6 +46,10 @@ public abstract class Serializer<T extends Savable> {
         Serializer<X> serializer = Factionals.getFactionals().getRegistry(Serializer.class, Class.class).get(clazz);
 
         serializer.save(savable);
+    }
+
+    public void onLoad() {
+
     }
 
     public abstract File dir();

@@ -4,11 +4,11 @@ import org.bukkit.Color;
 
 import java.util.Collection;
 
-public interface LandAdministrator extends FactionComponent {
-    Collection<Plot> getPlots();
+public interface LandAdministrator<T> extends FactionComponent {
+    Collection<T> getPlots();
 
-    void addPlot(Plot plot);
-    void removePlot(Plot plot);
+    void addPlot(T plot);
+    void removePlot(T plot);
 
     String getDesc();
 
