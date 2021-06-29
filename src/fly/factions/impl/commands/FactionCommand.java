@@ -137,6 +137,13 @@ public class FactionCommand extends CommandRegister {
                 .parameter(Parameter.INTEGER)
                 .build());
 
+        addSubCommand(new SubCommand.SubCommandBuilder(m(FactionImpl.class, "createTown"))
+                .parameter(Parameter.requireString("town"))
+                .parameter(Parameter.requireString("create"))
+                .parameter(Parameter.STRING)
+                .parameter(Parameter.STRING)
+                .build());
+
         this.factionals = factionals;
 
         factionals.getCommand("f").setExecutor(this);

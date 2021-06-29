@@ -1,20 +1,18 @@
 package fly.factions.impl.model;
 
-import fly.factions.api.model.Faction;
-import fly.factions.api.model.Lot;
-import fly.factions.api.model.Region;
-import fly.factions.api.model.User;
+import fly.factions.api.model.*;
 import fly.factions.api.permissions.Permissibles;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class RegionImpl extends AbstractLandAdministrator implements Region {
+public class RegionImpl extends AbstractLandAdministrator<Plot> implements Region {
     private Map<Integer, Lot> lots = new HashMap<>();
 
     private Faction faction;
+
+    private Set<Town> towns = new HashSet<>();
 
     public RegionImpl(String name, User leader, Faction faction) {
         super(name, leader);
@@ -70,5 +68,36 @@ public class RegionImpl extends AbstractLandAdministrator implements Region {
     @Override
     public void setLot(int lotNumber, Lot lot) {
         lots.put(lotNumber, lot);
+    }
+
+    @Override
+    public Faction getFaction() {
+        return faction;
+    }
+
+    @Override
+    public Collection<Town> getTowns() {
+        return new ArrayList<>(towns);
+    }
+
+    @Override
+    public Town getTown(String name) {
+        for (Town town : towns) {
+            if (town.getName().equalsIgnoreCase(name)) {
+                return town;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void addTown(Town town) {
+        towns.add(town);
+    }
+
+    @Override
+    public void removeTown(Town town) {
+        towns.remove(town);
     }
 }

@@ -6,14 +6,13 @@ import fly.factions.api.permissions.Permissibles;
 import fly.factions.api.permissions.PlotPermission;
 import fly.factions.api.registries.Registry;
 import fly.factions.api.serialization.Serializer;
-import fly.factions.impl.model.ExecutiveDivisionImpl;
-import fly.factions.impl.model.FactionImpl;
-import fly.factions.impl.model.PlotImpl;
-import fly.factions.impl.model.RegionImpl;
+import fly.factions.impl.model.*;
 import fly.factions.impl.util.Plots;
 import javafx.util.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -90,6 +89,34 @@ public class FactionSerializer extends Serializer<Faction> {
 
                     factionRegion.setFillOpacity(region.getDouble("fo"));
 
+                    //Lots
+
+                    ConfigurationSection lots = region.getConfigurationSection("lots");
+
+                    for(String lotString : lots.getKeys(false)) {
+                        Lot factionLot = new LotImpl(factionRegion, Integer.parseInt(lotString), Plots.getWorld(lots.getConfigurationSection(lotString).getInt("world")));
+
+                        factionRegion.setLot(factionLot.getId(), factionLot);
+                    }
+
+                    //Towns
+
+                    ConfigurationSection towns = region.getConfigurationSection("towns");
+
+                    for(String townString : towns.getKeys(false)) {
+                        ConfigurationSection town = towns.getConfigurationSection(townString);
+
+                        Town factionTown = new TownImpl(town.getString("name"), r.get(UUID.fromString(town.getString("leader"))), factionRegion);
+
+                        //Members
+
+                        for (String member : town.getStringList("members")) {
+                            factionTown.addMember(r.get(UUID.fromString(member)));
+                        }
+
+                        factionRegion.addTown(factionTown);
+                    }
+
                     faction.addRegion(factionRegion);
                 }
 
@@ -98,8 +125,6 @@ public class FactionSerializer extends Serializer<Faction> {
                 for (String member : configuration.getStringList("members")) {
                     r.get(UUID.fromString(member)).setFaction(faction);
                 }
-            } else {
-                faction = factionals.getRegistry(Faction.class, String.class).get(configuration.getString("name"));
 
                 //Plots
 
@@ -109,9 +134,11 @@ public class FactionSerializer extends Serializer<Faction> {
                     ConfigurationSection plot = plots.getConfigurationSection(string);
                     Plot factionPlot = new PlotImpl(plot.getInt("x"), plot.getInt("z"), Plots.getWorld(plot.getInt("w")), faction);
 
+
+                    factionPlot.setAdministrator((LandAdministrator) getPlotOwner(plot.getString("administrator")));
+                    /*
                     factionPlot.setPrice(plot.getInt("price"));
                     factionPlot.setOwner(getPlotOwner(plot.getString("owner")));
-                    factionPlot.setAdministrator((LandAdministrator) getPlotOwner(plot.getString("administrator")));
 
                     ConfigurationSection plotPermissions = plot.getConfigurationSection("permissions");
 
@@ -121,6 +148,49 @@ public class FactionSerializer extends Serializer<Faction> {
                             PlotPermission permission = PlotPermission.valueOf(key);
 
                             factionPlot.setPermission(plotPermissible, permission, true);
+                        }
+                    }*/
+                }
+            } else {
+                faction = factionals.getRegistry(Faction.class, String.class).get(configuration.getString("name"));
+
+                for(Region region : faction.getRegions()) {
+                    ConfigurationSection regionConfig = configuration.getConfigurationSection("regions." + region.getName() + ".lots");
+
+                    for(Lot lot : region.getLots().values()) {
+                        ConfigurationSection lotSection = regionConfig.getConfigurationSection("" + lot.getId());
+
+                        World world = Plots.getWorld(lotSection.getInt("world"));
+
+                        List<String> lotPlaces = lotSection.getStringList("areas");
+
+                        for(String place : lotPlaces) {
+                            String[] split = place.split(",");
+
+                            int x = Integer.parseInt(split[0]);
+                            int z = Integer.parseInt(split[1]);
+
+                            Location location = new Location(world, x, 0, z);
+
+                            Plot plot = factionals.getRegistry(Plot.class, Integer.class).get(Plots.getLocationId(location));
+
+                            plot.setLot(location, lot);
+                        }
+
+                        lot.setPrice(lotSection.getInt("price"));
+                        lot.setOwner(getPlotOwner(lotSection.getString("owner")));
+
+                        lot.setTown(region.getTown(lotSection.getString("town")));
+
+                        ConfigurationSection lotPermissions = lotSection.getConfigurationSection("permissions");
+
+                        for (String key : lotPermissions.getKeys(false)) {
+                            for (String permissible : lotPermissions.getStringList(key)) {
+                                Permissible plotPermissible = Permissibles.get(permissible).get(0);
+                                PlotPermission permission = PlotPermission.valueOf(key);
+
+                                lot.setPermission(plotPermissible, permission, true);
+                            }
                         }
                     }
                 }
@@ -134,6 +204,10 @@ public class FactionSerializer extends Serializer<Faction> {
 
     private PlotOwner getPlotOwner(String owner) {
         List<Permissible> permissibles = Permissibles.get(owner);
+
+        if(owner.isEmpty()) {
+            return null;
+        }
 
         for(Permissible permissible : permissibles) {
             if(permissible instanceof PlotOwner) {
@@ -179,6 +253,23 @@ public class FactionSerializer extends Serializer<Faction> {
             Map<String, Object> factionRegion = new HashMap<>();
 
             List<String> regionMembers = new ArrayList<>();
+            Map<String, Object> regionTowns = new HashMap<>();
+            Map<String, Object> regionLots = new HashMap<>();
+
+            //TODO: fix
+            Map<Integer, List<Pair<Integer, Integer>>> lotsAreas = new HashMap<>();
+
+            for(Integer lot : region.getLots().keySet()) {
+                lotsAreas.put(lot, new ArrayList<>());
+            }
+
+            for(Plot plot : region.getPlots()) {
+                Map<Pair<Integer, Integer>, Integer> map = plot.getLocations();
+
+                for (Pair<Integer, Integer> area : map.keySet()) {
+                    lotsAreas.get(map.get(area)).add(area);
+                }
+            }
 
             for(User user : region.getMembers()) {
                 regionMembers.add(user.getUniqueId().toString());
@@ -198,6 +289,58 @@ public class FactionSerializer extends Serializer<Faction> {
             factionRegion.put("fb", region.getFillColor().getBlue());
             factionRegion.put("fo", region.getFillOpacity());
 
+            for(Town town : region.getTowns()) {
+                Map<String, Object> factionTown = new HashMap<>();
+                List<String> townMembers = new ArrayList<>();
+
+                factionTown.put("name", town.getName());
+                factionTown.put("leader", town.getLeader().getUniqueId().toString());
+
+                for(User member : town.getMembers()) {
+                    townMembers.add(member.getUniqueId().toString());
+                }
+
+                factionTown.put("members", townMembers);
+
+                regionTowns.put(town.getName(), factionTown);
+            }
+
+            for(Lot lot : region.getLots().values()) {
+                Map<String, Object> factionLot = new HashMap<>();
+
+                String ownerId = lot.getOwner() == null ? "" : lot.getOwner().getId();
+
+                factionLot.put("owner", ownerId);
+                factionLot.put("price", lot.getPrice());
+                factionLot.put("world", Plots.getWorldId(lot.getWorld()));
+
+                Map<String, Object> permissions = new HashMap<>();
+                List<String> areas = new ArrayList<>();
+
+                for(PlotPermission permission : PlotPermission.values()) {
+                    List<String> specPerm = new ArrayList<>();
+
+                    for(Permissible permissible : lot.getPermissions().get(permission)) {
+                        specPerm.add(permissible.getId());
+                    }
+
+                    permissions.put(permission.name(), specPerm);
+                }
+
+                for(Pair<Integer, Integer> area : lotsAreas.get(lot.getId())) {
+                    areas.add(area.getKey() + "," + area.getValue());
+                }
+
+                factionLot.put("permissions", permissions);
+                factionLot.put("areas", areas);
+                factionLot.put("town", lot.getTown().getName());
+
+                regionLots.put("" + lot.getId(), factionLot);
+            }
+
+            factionRegion.put("towns", regionTowns);
+            factionRegion.put("lots", regionLots);
+
             regions.put(region.getName(), factionRegion);
         }
 
@@ -206,13 +349,16 @@ public class FactionSerializer extends Serializer<Faction> {
         for(Plot plot : faction.getPlots()) {
             Map<String, Object> factionPlot = new HashMap<>();
 
-            factionPlot.put("owner", plot.getOwner().getId());
             factionPlot.put("administrator", plot.getAdministrator().getId());
-            factionPlot.put("price", plot.getPrice());
 
             factionPlot.put("x", Plots.getX(plot.getLocationId()));
             factionPlot.put("z", Plots.getZ(plot.getLocationId()));
             factionPlot.put("w", Plots.getW(plot.getLocationId()));
+
+            //Map<Pair<Integer, Integer>, Integer> map = plot.getLocations();
+
+            /*factionPlot.put("owner", plot.getOwner().getId());
+            factionPlot.put("price", plot.getPrice());
 
             Map<String, Object> permissions = new HashMap<>();
 
@@ -226,7 +372,7 @@ public class FactionSerializer extends Serializer<Faction> {
                 permissions.put(permission.name(), specPerm);
             }
 
-            factionPlot.put("permissions", permissions);
+            factionPlot.put("permissions", permissions);*/
 
             plots.put(plot.getLocationId(), factionPlot);
         }

@@ -1,9 +1,9 @@
 package fly.factions.api.model;
 
-import fly.factions.api.permissions.PlotPermission;
+import org.bukkit.Location;
+import javafx.util.Pair;
 
-import java.util.EnumMap;
-import java.util.Set;
+import java.util.Map;
 
 public interface Plot extends Savable, LandDivision {
     void setFaction(Faction faction);
@@ -16,17 +16,9 @@ public interface Plot extends Savable, LandDivision {
 
     void setAdministrator(LandAdministrator administrator);
 
-    boolean hasPermission(User user, PlotPermission permission);
+    Lot getLot(Location location);
 
-    void setPermission(Permissible permissible, PlotPermission permission, boolean allowed);
+    void setLot(Location location, Lot lot);
 
-    EnumMap<PlotPermission, Set<Permissible>> getPermissions();
-
-    PlotOwner getOwner();
-
-    void setOwner(PlotOwner owner);
-
-    void setPrice(int price);
-
-    int getPrice();
+    Map<Pair<Integer, Integer>, Integer> getLocations();
 }

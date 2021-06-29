@@ -4,6 +4,9 @@ import fly.factions.Factionals;
 import fly.factions.api.model.*;
 import fly.factions.api.permissions.PlotPermission;
 import fly.factions.impl.util.Plots;
+import javafx.util.Pair;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.*;
@@ -15,11 +18,8 @@ public class PlotImpl implements Plot {
 
     private Faction faction;
     private LandAdministrator admin;
-    private PlotOwner owner;
-    private int price;
 
-    private EnumMap<PlotPermission, Set<Permissible>> permissionMap = new EnumMap<>(PlotPermission.class);
-    private boolean publicPlot;
+    private Map<Pair<Integer, Integer>, Integer> areas = new HashMap<>();
 
     public PlotImpl(int x, int z, World w, Faction faction) {
         this.x = x;
@@ -27,10 +27,6 @@ public class PlotImpl implements Plot {
         this.w = w;
 
         setFaction(faction);
-
-        for(PlotPermission permission : PlotPermission.values()) {
-            permissionMap.put(permission, new HashSet<>());
-        }
     }
 
     @Override
@@ -44,9 +40,6 @@ public class PlotImpl implements Plot {
         this.faction = faction;
 
         this.faction.addPlot(this);
-
-        this.setOwner(faction);
-        this.setPrice(-1);
 
         this.setAdministrator(faction);
     }
@@ -78,53 +71,31 @@ public class PlotImpl implements Plot {
     }
 
     @Override
-    public boolean hasPermission(User user, PlotPermission permission) {
-        for(Permissible permissible : permissionMap.get(permission)) {
-            if(permissible.userHasPlotPermissions(user, false, publicPlot)) {
-                return true;
+    public Lot getLot(Location location) {
+        Chunk c = location.getChunk();
+
+        if(admin instanceof Region) {
+            if (c.getZ() == z && c.getX() == x && c.getWorld().equals(w)) {
+                return ((Region) admin).getLots().get(areas.get(new Pair<>(location.getBlockX(), location.getBlockZ())));
             }
         }
 
-        return owner.userHasPlotPermissions(user, false, publicPlot);
+        return null;
     }
 
     @Override
-    public void setPermission(Permissible permissible, PlotPermission permission, boolean allowed) {
-        if(allowed) {
-            permissionMap.get(permission).add(permissible);
-        } else {
-            permissionMap.get(permission).remove(permissible);
+    public void setLot(Location location, Lot lot) {
+        Chunk c = location.getChunk();
+
+        if(admin instanceof Region) {
+            if (c.getZ() == z && c.getX() == x && c.getWorld().equals(w) && lot.getWorld().equals(w)) {
+                areas.put(new Pair<>(location.getBlockX(), location.getBlockZ()), lot.getId());
+            }
         }
     }
 
     @Override
-    public EnumMap<PlotPermission, Set<Permissible>> getPermissions() {
-        EnumMap<PlotPermission, Set<Permissible>> ret = new EnumMap<>(PlotPermission.class);
-
-        for(PlotPermission permission : PlotPermission.values()) {
-            ret.put(permission, new HashSet<>(permissionMap.get(permission)));
-        }
-
-        return ret;
-    }
-
-    @Override
-    public PlotOwner getOwner() {
-        return owner;
-    }
-
-    @Override
-    public void setOwner(PlotOwner owner) {
-        this.owner = owner;
-    }
-
-    @Override
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    @Override
-    public int getPrice() {
-        return price;
+    public Map<Pair<Integer, Integer>, Integer> getLocations() {
+        return new HashMap<>(areas);
     }
 }

@@ -1,8 +1,6 @@
 package fly.factions.impl.model;
 
-import fly.factions.api.model.Faction;
 import fly.factions.api.model.LandAdministrator;
-import fly.factions.api.model.Plot;
 import fly.factions.api.model.User;
 import org.bukkit.Color;
 

@@ -95,6 +95,7 @@ public class Factionals extends JavaPlugin implements Listener {
         }
 
         Collection<Faction> factionList = Serializer.loadAll(Faction.class);
+        Serializer.loadAll(Faction.class);
 
         for(Faction faction : factionList) {
             registries.get(Faction.class).set(faction.getName(), faction);

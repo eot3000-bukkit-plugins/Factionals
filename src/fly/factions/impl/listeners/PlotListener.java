@@ -2,6 +2,7 @@ package fly.factions.impl.listeners;
 
 import fly.factions.Factionals;
 import fly.factions.api.model.Faction;
+import fly.factions.api.model.Lot;
 import fly.factions.api.model.Plot;
 import fly.factions.api.model.User;
 import fly.factions.api.permissions.PlotPermission;
@@ -33,26 +34,21 @@ public class PlotListener extends ListenerImpl {
         Plot to = pr.get(Plots.getLocationId(e.getTo()));
         Plot from = pr.get(Plots.getLocationId(e.getFrom()));
 
-        if(to == null && from != null) {
+        if (f(to) == f(from)) {
+            return;
+        }
+
+        if (to == null) {
             e.getPlayer().sendTitle(ChatColor.DARK_GREEN + "Entering Wilderness", ChatColor.GREEN + "It's dangerous to go alone", 5, 25, 5);
         } else {
-            Faction fromFaction = from != null ? from.getFaction() : null;
-            String fromFactionName = fromFaction != null ? fromFaction.getName() : ChatColor.GREEN + "Wilderness";
+            Faction f = to.getFaction();
 
-            if(to != null) {
-                if (to.getFaction() != fromFaction) {
-                    e.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + to.getFaction().getName(), ChatColor.YELLOW + "Leaving " + fromFactionName, 5, 25, 5);
-                }
-
-                if(to != from) {
-                    if(to.getPrice() != -1) {
-                        e.getPlayer().sendMessage(ChatColor.GREEN + "[For Sale: " + to.getPrice() + "] " + ChatColor.GOLD + "Owner: " + to.getOwner().getName());
-                    } else {
-                        e.getPlayer().sendMessage(ChatColor.GOLD + "Owner: " + to.getOwner().getName());
-                    }
-                }
-            }
+            e.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + ChatColor.YELLOW + f.getName(), ChatColor.YELLOW + "Placeholder for description", 5, 25, 5);
         }
+    }
+
+    private Faction f(Plot p) {
+        return p == null ? null : p.getFaction();
     }
 
     @EventHandler
@@ -69,10 +65,16 @@ public class PlotListener extends ListenerImpl {
             return;
         }
 
+        Lot lot = plot.getLot(event.getClickedBlock().getLocation());
+
+        if (lot == null) {
+            return;
+        }
+
         if (event.getItem() != null) {
             Material t = event.getItem().getType();
 
-            if (!plot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.VEHICLES)) {
+            if (!lot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.VEHICLES)) {
                 if (Tag.ITEMS_BOATS.isTagged(t)) {
                     event.setCancelled(true);
                 }
@@ -83,13 +85,13 @@ public class PlotListener extends ListenerImpl {
                 }
             }
 
-            if (!plot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.DETAILS)) {
+            if (!lot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.DETAILS)) {
                 if (t.equals(Material.PAINTING) || t.equals(Material.ITEM_FRAME) || t.equals(Material.ARMOR_STAND)) {
                     event.setCancelled(true);
                 }
             }
 
-            if (!plot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.BUILD)) {
+            if (!lot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.BUILD)) {
                 if (t.equals(Material.FLINT_AND_STEEL)) {
                     event.setCancelled(true);
                 }
@@ -97,9 +99,9 @@ public class PlotListener extends ListenerImpl {
         }
 
         for (PlotPermission permission : PlotPermission.values()) {
-            System.out.println(event.getPlayer().getName() + " " + permission + " " + permission.required(event.getClickedBlock(), event.getAction(), event.getPlayer().isSneaking()) + " " + plot.hasPermission(getUserFromPlayer(event.getPlayer()), permission));
+            System.out.println(event.getPlayer().getName() + " " + permission + " " + permission.required(event.getClickedBlock(), event.getAction(), event.getPlayer().isSneaking()) + " " + lot.hasPermission(getUserFromPlayer(event.getPlayer()), permission));
 
-            if (permission.required(event.getClickedBlock(), event.getAction(), event.getPlayer().isSneaking()) && !plot.hasPermission(getUserFromPlayer(event.getPlayer()), permission)) {
+            if (permission.required(event.getClickedBlock(), event.getAction(), event.getPlayer().isSneaking()) && !lot.hasPermission(getUserFromPlayer(event.getPlayer()), permission)) {
                 event.setCancelled(true);
             }
         }
@@ -115,11 +117,17 @@ public class PlotListener extends ListenerImpl {
             return;
         }
 
-        if(!plot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.BUILD)) {
+        Lot lot = plot.getLot(event.getBlock().getLocation());
+
+        if (lot == null) {
+            return;
+        }
+
+        if(!lot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.BUILD)) {
             event.setCancelled(true);
         }
 
-        if(event.getBlock().getState() instanceof Container && !plot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.CONTAINER)) {
+        if(event.getBlock().getState() instanceof Container && !lot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.CONTAINER)) {
             event.setCancelled(true);
         }
     }
@@ -134,7 +142,13 @@ public class PlotListener extends ListenerImpl {
             return;
         }
 
-        if(!plot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.BUILD)) {
+        Lot lot = plot.getLot(event.getBlock().getLocation());
+
+        if (lot == null) {
+            return;
+        }
+
+        if(!lot.hasPermission(getUserFromPlayer(event.getPlayer()), PlotPermission.BUILD)) {
             event.setCancelled(true);
         }
     }
@@ -146,17 +160,26 @@ public class PlotListener extends ListenerImpl {
         InventoryHolder holder = event.getInventory().getHolder();
 
         Plot plot = null;
+        Lot lot = null;
 
         if(holder instanceof Entity && !(holder instanceof HumanEntity)) {
             plot = pr.get(Plots.getLocationId(((Entity) holder).getLocation()));
+
+            lot = plot.getLot(((Entity) holder).getLocation());
         }
 
         if(holder instanceof BlockState) {
             plot = pr.get(Plots.getLocationId(((BlockState) holder).getLocation()));
+
+            lot = plot.getLot(((BlockState) holder).getLocation());
         }
 
         if(plot != null) {
-            if(!plot.hasPermission(Factionals.getFactionals().getRegistry(User.class, UUID.class).get(event.getPlayer().getUniqueId()), PlotPermission.CONTAINER)) {
+            if (lot == null) {
+                return;
+            }
+
+            if(!lot.hasPermission(Factionals.getFactionals().getRegistry(User.class, UUID.class).get(event.getPlayer().getUniqueId()), PlotPermission.CONTAINER)) {
                 event.setCancelled(true);
             }
         }

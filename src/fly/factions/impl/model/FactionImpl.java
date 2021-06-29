@@ -188,7 +188,12 @@ public class FactionImpl extends AbstractLandAdministrator<Plot> implements Fact
         departments.remove(division);
     }
 
-    //TODO: Move commands into seperate class
+    @Override
+    public Faction getFaction() {
+        return this;
+    }
+
+    //TODO: Move commands into separate class
 
     private static void requireFactionNotExist(CommandSender sender, String name) {
         Faction faction = factionals.getRegistry(Faction.class, String.class).get(name);
@@ -232,6 +237,11 @@ public class FactionImpl extends AbstractLandAdministrator<Plot> implements Fact
         requireFactionNotExist(sender, name);
 
         User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        if(user.getFaction() != null) {
+            sender.sendMessage(ChatColor.RED + "Already in a faction!");
+            return false;
+        }
 
         Faction faction = new FactionImpl(user, name);
 
@@ -657,6 +667,25 @@ public class FactionImpl extends AbstractLandAdministrator<Plot> implements Fact
 
         factionRegion.setBorderColor(Color.fromRGB(red, green, blue));
 
+        return true;
+    }
+
+    public static boolean createTown(CommandSender sender, String a, String b, String s, String region) {
+        CommandRegister.requirePlayer(sender);
+
+        User user = factionals.getRegistry(User.class, UUID.class).get(((Player) sender).getUniqueId());
+
+        requireNotNull(user.getFaction(), ChatColor.RED + "You are not in a faction!", sender);
+
+        Region factionRegion = user.getFaction().getRegion(region);
+
+        requireNotNull(factionRegion, ChatColor.RED + "No such region!", sender);
+
+        if(!factionRegion.getLeader().equals(user)) {
+            requirePermission(user, FactionPermission.INTERNAL_MANAGEMENT, user.getFaction());
+        }
+
+        factionRegion.addTown(new TownImpl(s, user, factionRegion));
         return true;
     }
 }

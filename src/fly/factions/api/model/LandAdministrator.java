@@ -22,4 +22,6 @@ public interface LandAdministrator<T> extends FactionComponent {
     void setBorderColor(Color color);
 
     double getBorderOpacity();
+
+    Faction getFaction();
 }
