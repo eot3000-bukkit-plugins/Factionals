@@ -1,11 +1,13 @@
 package fly.factions;
 
 import fly.factions.api.model.Faction;
+import fly.factions.api.model.PlayerGroup;
 import fly.factions.api.model.Plot;
 import fly.factions.api.model.User;
 import fly.factions.api.registries.Registry;
 import fly.factions.impl.commands.FactionCommand;
 //import fly.factions.impl.listeners.ChatListener;
+import fly.factions.impl.commands.FactionCommands;
 import fly.factions.impl.commands.PlotCommand;
 import fly.factions.impl.dynmap.DynmapManager;
 import fly.factions.impl.listeners.JoinLeaveListener;
@@ -33,7 +35,7 @@ import java.io.File;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class Factionals extends JavaPlugin implements Listener {
+public class Factionals extends JavaPlugin implements Listener, PlayerGroup {
     private Map<Class<?>, Registry> registries = new HashMap<>();
 
     private FactionCommand factionCommand;
@@ -86,6 +88,8 @@ public class Factionals extends JavaPlugin implements Listener {
 
         factionCommand = new FactionCommand(this);
         plotCommand = new PlotCommand(this);
+
+        new FactionCommands();
 
 
         Collection<User> userList = Serializer.loadAll(User.class);
@@ -219,5 +223,17 @@ public class Factionals extends JavaPlugin implements Listener {
 
     public Economy getEconomy() {
         return economy;
+    }
+
+    @Override
+    public void broadcast(String s) {
+        for(User user : getMembers()) {
+            user.sendMessage(s);
+        }
+    }
+
+    @Override
+    public Collection<User> getMembers() {
+        return getRegistry(User.class, UUID.class).list();
     }
 }
